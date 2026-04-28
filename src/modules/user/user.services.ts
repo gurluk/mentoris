@@ -13,17 +13,15 @@ import { unwrapResult } from "~/utils/db.util";
 import { hashUtil } from "~/utils/hash.util";
 
 import { CreateUserInput } from "./user.types";
-import { Role } from "../auth/auth.constants";
+import { ROLES, Role } from "../auth/auth.constants";
 
 export function createUserService(app: App) {
 	const { db } = app;
 
 	async function createUser(user: CreateUserInput) {
 		return await db.transaction(async (tx) => {
-			const userRoleToAssign = "USER";
-
 			const role = await tx.query.userRoles.findFirst({
-				where: eq(userRoles.label, userRoleToAssign),
+				where: eq(userRoles.code, ROLES.USER),
 			});
 
 			const roleId = role?.id;

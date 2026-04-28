@@ -16,12 +16,14 @@ export function createProfileService(app: App) {
 	async function createProfile(body: CreateProfileRequest, userId: number) {
 		const existingProfile = await checkExistsProfileByUserId(userId);
 
-		if (existingProfile) throw new ConflictError("Profile already exists");
+		if (existingProfile) throw new ConflictError("Korisnik već postoji");
 
 		const [profile] = await db
 			.insert(profiles)
 			.values({ user_id: userId, ...body, dob: undefined })
 			.returning();
+
+		if (!profile) throw new NotFoundError("Doslo je do greske prilikom kreiranja profila");
 
 		return profile;
 	}
