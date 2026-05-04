@@ -18,13 +18,9 @@ export function createReviewService(app: App) {
 			columns: { id: true, user_id: true },
 		});
 
-		if (!offer) {
-			throw new NotFoundError("Offer not found");
-		}
+		if (!offer) throw new NotFoundError("Offer not found");
 
-		if (offer.user_id === userId) {
-			throw new ForbiddenError("You cannot review your own offer!");
-		}
+		if (offer.user_id === userId) throw new ForbiddenError("You cannot review your own offer!");
 
 		const reviewExists = await checkUserReviewExistsByOfferId(userId, payload.offerId);
 

@@ -1,6 +1,3 @@
-import { createTokenService } from "~/modules/token/token.services";
-import { createVerificationTokensService } from "~/modules/token/verificationToken.services";
-import { createUserService } from "~/modules/user/user.services";
 import { AccountNotVerifiedError } from "~/shared/errors/domain/AccountNotVerifiedError";
 import { AlreadyVerifiedError } from "~/shared/errors/domain/AlreadyVerifiedError";
 import { InvalidCredentialsError } from "~/shared/errors/domain/InvalidCredentialsError";
@@ -15,25 +12,21 @@ import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
 
 export function createAuthService(app: App) {
-	const userService = createUserService(app);
-	const verificationTokenService = createVerificationTokensService(app);
-	const tokenService = createTokenService(app);
-
 	async function register(payload: RegisterUserRequest) {
-		const isUserExisting = await userService.checkUserExistsByEmail(payload.email);
+		const isUserExisting = await app.userService.checkUserExistsByEmail(payload.email);
 
 		if (isUserExisting) throw new ConflictError("Email already in use");
 
 		const hashedPassword = await hashUtil.password.hash(payload.password);
 
-		const newUser = await userService.createUser({
+		const newUser = await app.userService.createUser({
 			email: payload.email,
 			password: hashedPassword,
 		});
 
 		await app.profileService.createProfile({ name: payload.name }, newUser.id);
 
-		const token = await verificationTokenService.createVerificationToken(
+		const token = await app.verificationTokenService.createVerificationToken(
 			newUser.id,
 			"email_verification",
 		);
@@ -53,27 +46,25 @@ export function createAuthService(app: App) {
 	}
 
 	async function verifyUserAndLogin(token: string) {
-		const { user, token: storedHashToken } = await userService.getUserWithValidVerificationToken(
-			token,
-			"email_verification",
-		);
+		const { user, token: storedHashToken } =
+			await app.userService.getUserWithValidVerificationToken(token, "email_verification");
 
 		if (!user) throw new BadRequestError("Invalid verification token.");
 
-		await verificationTokenService.markTokenUsed(storedHashToken.token);
-		await userService.verifyUser(user.id);
+		await app.verificationTokenService.markTokenUsed(storedHashToken.token);
+		await app.userService.verifyUser(user.id);
 
-		const jti = tokenService.generateJti();
-		const { role } = await userService.getUserRole(user.id);
+		const jti = app.tokenService.generateJti();
+		const { role } = await app.userService.getUserRole(user.id);
 
-		const accessToken = tokenService.issueAccessToken(user.id, role);
-		const refreshToken = await tokenService.issueRefreshToken(user.id, jti);
+		const accessToken = app.tokenService.issueAccessToken(user.id, role);
+		const refreshToken = await app.tokenService.issueRefreshToken(user.id, jti);
 
 		return { accessToken, refreshToken };
 	}
 
 	async function login(payload: LoginRequest) {
-		const user = await userService.getUserByEmail(payload.email);
+		const user = await app.userService.getUserByEmail(payload.email);
 
 		if (!user) throw new InvalidCredentialsError();
 
@@ -83,49 +74,52 @@ export function createAuthService(app: App) {
 
 		if (!user.is_verified) throw new AccountNotVerifiedError();
 
-		const jti = tokenService.generateJti();
+		const jti = app.tokenService.generateJti();
 
-		const userRole = await userService.getUserRole(user.id);
+		const userRole = await app.userService.getUserRole(user.id);
 
-		const accessToken = tokenService.issueAccessToken(user.id, userRole.role);
-		const refreshToken = await tokenService.issueRefreshToken(user.id, jti);
+		const accessToken = app.tokenService.issueAccessToken(user.id, userRole.role);
+		const refreshToken = await app.tokenService.issueRefreshToken(user.id, jti);
 
 		return { accessToken, refreshToken, isVerified: user.is_verified, email: user.email };
 	}
 
 	async function refresh(oldRefreshToken: string) {
-		const payload = tokenService.verifyRefreshToken(oldRefreshToken);
-		const storedToken = await tokenService.getRefreshTokenByJti(payload.jti);
+		const payload = app.tokenService.verifyRefreshToken(oldRefreshToken);
+		const storedToken = await app.tokenService.getRefreshTokenByJti(payload.jti);
 
 		const isTokenInvalid = !storedToken || storedToken.revoked;
 
 		if (isTokenInvalid) throw new InvalidCredentialsError("Token has been revoked or is expired");
 
-		const newJti = tokenService.generateJti();
+		const newJti = app.tokenService.generateJti();
 
-		const { role } = await userService.getUserRole(storedToken.user_id);
+		const { role } = await app.userService.getUserRole(storedToken.user_id);
 
-		const accessToken = tokenService.issueAccessToken(storedToken.user_id, role);
-		const newRefreshToken = await tokenService.issueRefreshToken(storedToken.user_id, newJti);
+		const accessToken = app.tokenService.issueAccessToken(storedToken.user_id, role);
+		const newRefreshToken = await app.tokenService.issueRefreshToken(storedToken.user_id, newJti);
 
-		await tokenService.revokeRefreshToken(oldRefreshToken);
+		await app.tokenService.revokeRefreshToken(oldRefreshToken);
 
 		return { accessToken, refreshToken: newRefreshToken };
 	}
 
 	async function logout(refreshToken: string) {
-		await tokenService.revokeRefreshToken(refreshToken);
+		await app.tokenService.revokeRefreshToken(refreshToken);
 	}
 
 	async function requestResetPassword(email: string) {
-		const user = await userService.getUserByEmail(email);
+		const user = await app.userService.getUserByEmail(email);
 
 		if (!user.email) {
 			// TODO Logger logs error silently
 			return;
 		}
 
-		const token = await verificationTokenService.createVerificationToken(user.id, "password_reset");
+		const token = await app.verificationTokenService.createVerificationToken(
+			user.id,
+			"password_reset",
+		);
 
 		app.email.send({
 			to: user.email,
@@ -144,7 +138,7 @@ export function createAuthService(app: App) {
 	async function resetPassword(payload: ResetPasswordRequest) {
 		const hashedPayloadToken = hashUtil.token.hash(payload.token);
 
-		const user = await userService.getUserWithValidVerificationToken(
+		const user = await app.userService.getUserWithValidVerificationToken(
 			hashedPayloadToken,
 			"password_reset",
 		);
@@ -159,21 +153,21 @@ export function createAuthService(app: App) {
 			throw new NotFoundError("Password reset request token not found");
 		}
 
-		await verificationTokenService.markTokenUsed(hashedPayloadToken);
+		await app.verificationTokenService.markTokenUsed(hashedPayloadToken);
 
 		const hashedNewPassword = await hashUtil.password.hash(payload.newPassword);
 
-		await userService.updateUserPassword(user.user.id, hashedNewPassword);
+		await app.userService.updateUserPassword(user.user.id, hashedNewPassword);
 	}
 
 	async function resendVerificationLink(email: string) {
-		const user = await userService.getUserByEmail(email);
+		const user = await app.userService.getUserByEmail(email);
 
 		if (!user) throw new NotFoundError("User not found");
 
 		if (user.is_verified) throw new AlreadyVerifiedError();
 
-		const token = await verificationTokenService.createVerificationToken(
+		const token = await app.verificationTokenService.createVerificationToken(
 			user.id,
 			"email_verification",
 		);
