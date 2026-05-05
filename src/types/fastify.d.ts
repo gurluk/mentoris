@@ -2,31 +2,35 @@ import "@fastify/jwt";
 import "fastify";
 
 import { Role } from "~/constants/roles";
-import { createAuthService } from "~/modules/auth/auth.services";
-import { createDictionaryService } from "~/modules/dictionary/dictionary.services";
-import { createOfferService } from "~/modules/offer/offer.services";
-import { createProfileService } from "~/modules/profile/profile.services";
-import { createReviewService } from "~/modules/review/review.services";
-import { createTokenService } from "~/modules/token/token.services";
-import { createVerificationTokensService } from "~/modules/token/verificationToken.services";
-import { createUserService } from "~/modules/user/user.services";
+import { AuthService } from "~/modules/auth/auth.types";
+import { DictionaryService } from "~/modules/dictionary/dictionary.types";
+import { OfferService } from "~/modules/offer/offer.types";
+import { ProfileService } from "~/modules/profile/profile.types";
+import { ReviewService } from "~/modules/review/review.types";
+import { TokenService } from "~/modules/token/token.types";
+import { VerificationTokenService } from "~/modules/token/verificationToken.services";
+import { UserService } from "~/modules/user/user.types";
 
 import { AppDb } from "./db.types";
 import { JwtPayload } from "./jwt.types";
-import { EmailPlugin } from "../modules/email/email.types";
 
 declare module "fastify" {
 	interface FastifyInstance {
+		// DB
 		db: AppDb;
-		email: EmailPlugin;
-		authService: ReturnType<typeof createAuthService>;
-		offerService: ReturnType<typeof createOfferService>;
-		reviewService: ReturnType<typeof createReviewService>;
-		dictionaryService: ReturnType<typeof createDictionaryService>;
-		tokenService: ReturnType<typeof createTokenService>;
-		verificationTokenService: ReturnType<typeof createVerificationTokensService>;
-		profileService: ReturnType<typeof createProfileService>;
-		userService: ReturnType<typeof createUserService>;
+
+		// Services
+		emailService: EmailService;
+		authService: AuthService;
+		offerService: OfferService;
+		reviewService: ReviewService;
+		dictionaryService: DictionaryService;
+		tokenService: TokenService;
+		verificationTokenService: VerificationTokenService;
+		profileService: ProfileService;
+		userService: UserService;
+
+		// Auth
 		authorize: (role: Role) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
 	}
 

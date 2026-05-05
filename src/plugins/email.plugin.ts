@@ -16,7 +16,7 @@ const emailPluginHandler: FastifyPluginAsync = async (app) => {
 
 	const emailService = createEmailService({ transporter });
 
-	app.decorate("email", emailService);
+	app.decorate("emailService", emailService);
 };
 
 export const emailPlugin = fp(emailPluginHandler, {

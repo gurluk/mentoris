@@ -2,13 +2,14 @@ import { and, eq, gt, sql } from "drizzle-orm";
 
 import { type VerificationTokenContext, verificationTokens } from "~/db/schema";
 import { TooManyRequestsError } from "~/shared/errors/domain/TooManyRequestsError";
-import { App } from "~/types/app.types";
 import { minutesFromNow } from "~/utils/datetime.util";
 import { hashUtil } from "~/utils/hash.util";
 import { generateUuid } from "~/utils/uuid.util";
 
-export function createVerificationTokensService(app: App) {
-	const { db } = app;
+import { TokenServiceDeps } from "./token.types";
+
+export function createVerificationTokensService(deps: TokenServiceDeps) {
+	const { db } = deps;
 
 	async function createVerificationToken(userId: number, context: VerificationTokenContext) {
 		const MAX_TOKENS_PER_HOUR = 3;
@@ -58,3 +59,5 @@ export function createVerificationTokensService(app: App) {
 		markTokenUsed,
 	};
 }
+
+export type VerificationTokenService = ReturnType<typeof createVerificationTokensService>;

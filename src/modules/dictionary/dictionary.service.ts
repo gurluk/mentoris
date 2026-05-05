@@ -1,8 +1,9 @@
 import { cities, offerCategories } from "~/db/schema";
-import { App } from "~/types/app.types";
 
-export function createDictionaryService(app: App) {
-	const { db } = app;
+import { DictionaryServiceDeps } from "./dictionary.types";
+
+export function createDictionaryService(deps: DictionaryServiceDeps) {
+	const { db } = deps;
 
 	async function getCitiesDictionary() {
 		return await db.select().from(cities);

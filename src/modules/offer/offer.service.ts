@@ -3,13 +3,13 @@ import { eq } from "drizzle-orm";
 import { offers, offersOfferLevels } from "~/db/schema";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { App } from "~/types/app.types";
 
+import { OfferServiceDeps } from "./offer.types";
 import type { CreateOfferRequest } from "./schemas/dto/create-offer.schema";
 import type { UpdateOfferRequest } from "./schemas/dto/update-offer.schema";
 
-export function createOfferService(app: App) {
-	const { db } = app;
+export function createOfferService(deps: OfferServiceDeps) {
+	const { db } = deps;
 
 	async function createOffer(body: CreateOfferRequest, userId: number) {
 		const existingOffer = await checkOfferExistsByUserId(userId);

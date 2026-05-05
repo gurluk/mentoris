@@ -5,13 +5,13 @@ import { registerAppRoutes } from "~/app.router";
 import { env } from "~/env";
 import { dbClientPlugin } from "~/plugins/db.plugin";
 
+import { applicationPlugin } from "./plugins/application.plugin";
 import { authPlugin } from "./plugins/auth.plugin";
 import { cookiePlugin } from "./plugins/cookie.plugin";
 import { corsPlugin } from "./plugins/cors.plugin";
 import { emailPlugin } from "./plugins/email.plugin";
 import { globalExceptionPlugin } from "./plugins/globalException.plugin";
 import { responsePlugin } from "./plugins/response.plugin";
-import { servicesPlugin } from "./plugins/services.plugin";
 import { swaggerPlugin } from "./plugins/swagger.plugin";
 import { uploadFilePlugin } from "./plugins/uploadFile.plugin";
 
@@ -19,20 +19,39 @@ export async function buildApp() {
 	const baseApp = Fastify({ keepAliveTimeout: 30000 });
 	const app = baseApp.withTypeProvider<ZodTypeProvider>();
 
+	// Register Zod so it can be used in routes as schema instead of json schema
 	app.setValidatorCompiler(validatorCompiler);
 	app.setSerializerCompiler(serializerCompiler);
 
+	// DB client
 	app.register(dbClientPlugin);
-	app.register(servicesPlugin);
+
+	// App bootstrap modules, services, repositories
+	app.register(applicationPlugin);
+
+	// Email service bootstrap
 	app.register(emailPlugin);
+
+	// Cors
 	app.register(corsPlugin);
+
+	// JWT check and inject in request object
 	app.register(authPlugin);
+
+	// Check cookies
 	app.register(cookiePlugin);
+
+	// Global response shape to use inside routes/controllers
 	app.register(responsePlugin);
+
+	// Global error response middleware
 	app.register(globalExceptionPlugin);
 	app.register(uploadFilePlugin);
+
+	// Swagger register to generate swagger shema from routes
 	app.register(swaggerPlugin);
 
+	// Routes bootstrap
 	app.register(registerAppRoutes, { prefix: "/api" });
 
 	return app;

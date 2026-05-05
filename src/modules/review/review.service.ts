@@ -4,13 +4,13 @@ import { offerReviews, offers } from "~/db/schema";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { ForbiddenError } from "~/shared/errors/generic/ForbiddenError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { App } from "~/types/app.types";
 import { unwrapResult } from "~/utils/db.util";
 
+import { ReviewServiceDeps } from "./review.types";
 import type { CreateReviewRequest } from "./schemas/dto/create-review.schema";
 
-export function createReviewService(app: App) {
-	const { db } = app;
+export function createReviewService(deps: ReviewServiceDeps) {
+	const { db } = deps;
 
 	async function createReview(payload: CreateReviewRequest, userId: number) {
 		const offer = await db.query.offers.findFirst({

@@ -3,14 +3,14 @@ import { eq } from "drizzle-orm";
 import { profiles } from "~/db/schema";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { App } from "~/types/app.types";
 import { unwrapResult } from "~/utils/db.util";
 
+import { ProfileServiceDeps } from "./profile.types";
 import { CreateProfileRequest } from "./schemas/dto/create-profile.schema";
 import { UpdateProfileRequest } from "./schemas/dto/update-profile.schema";
 
-export function createProfileService(app: App) {
-	const { db } = app;
+export function createProfileService(deps: ProfileServiceDeps) {
+	const { db } = deps;
 
 	// TODO sanitize multipart fields, trim and clear up
 	async function createProfile(body: CreateProfileRequest, userId: number) {
@@ -70,5 +70,3 @@ export function createProfileService(app: App) {
 		checkExistsProfileByUserId,
 	};
 }
-
-export type ProfileService = ReturnType<typeof createProfileService>;

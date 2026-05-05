@@ -1,5 +1,7 @@
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
+import { createEmailService } from "./email.service";
+
 interface TemplateVariables {
 	resetPasswordTemplate: {
 		link: string;
@@ -25,3 +27,5 @@ export type SendEmailParams = {
 export interface EmailPlugin {
 	send: (options: SendEmailParams) => Promise<SMTPTransport.SentMessageInfo>;
 }
+
+export type EmailService = ReturnType<typeof createEmailService>;

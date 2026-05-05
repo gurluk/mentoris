@@ -8,15 +8,14 @@ import {
 	verificationTokens,
 } from "~/db/schema";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { App } from "~/types/app.types";
 import { unwrapResult } from "~/utils/db.util";
 import { hashUtil } from "~/utils/hash.util";
 
-import { CreateUserInput } from "./user.types";
+import { CreateUserInput, UserServiceDeps } from "./user.types";
 import { ROLES, Role } from "../auth/auth.constants";
 
-export function createUserService(app: App) {
-	const { db } = app;
+export function createUserService(deps: UserServiceDeps) {
+	const { db } = deps;
 
 	async function createUser(user: CreateUserInput) {
 		return await db.transaction(async (tx) => {
