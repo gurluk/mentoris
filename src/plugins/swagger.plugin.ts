@@ -24,7 +24,7 @@ const swaggerConfig: FastifyPluginAsync = async (app) => {
 		routePrefix: "/docs",
 		transformSpecificationClone: true,
 		uiConfig: {
-			docExpansion: "list",
+			docExpansion: "none",
 		},
 	});
 };
