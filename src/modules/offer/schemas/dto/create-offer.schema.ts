@@ -8,9 +8,15 @@ export const CreateOfferRequestSchema = z
 		priceFromCents: z.number().int().nonnegative(),
 		priceToCents: z.number().int().nonnegative(),
 
-		formatIdList: z.array(z.number()).min(1, "At least one level must be selected"),
-		levelIdList: z.array(z.number()).min(1, "At least one level must be selected"),
-		categoryIdList: z.array(z.number()).min(1, "At least one category must be selected"),
+		formatIdList: z
+			.array(z.number())
+			.min(1, "At least one level must be selected"),
+		levelIdList: z
+			.array(z.number())
+			.min(1, "At least one level must be selected"),
+		categoryIdList: z
+			.array(z.number())
+			.min(1, "At least one category must be selected"),
 	})
 	.strict()
 	.refine((data) => data.priceFromCents <= data.priceToCents, {

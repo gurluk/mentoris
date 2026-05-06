@@ -20,9 +20,13 @@ export function createReviewService(deps: ReviewServiceDeps) {
 
 		if (!offer) throw new NotFoundError("Offer not found");
 
-		if (offer.user_id === userId) throw new ForbiddenError("You cannot review your own offer!");
+		if (offer.user_id === userId)
+			throw new ForbiddenError("You cannot review your own offer!");
 
-		const reviewExists = await checkUserReviewExistsByOfferId(userId, payload.offerId);
+		const reviewExists = await checkUserReviewExistsByOfferId(
+			userId,
+			payload.offerId,
+		);
 
 		if (reviewExists) {
 			throw new ConflictError("Review already exists");
@@ -47,7 +51,10 @@ export function createReviewService(deps: ReviewServiceDeps) {
 		// TODO pagination
 		// TODO show review full
 		const reviewsData = await db.query.offerReviews.findMany({
-			where: and(eq(offerReviews.offer_id, offerId), eq(offerReviews.mod_status, "APPROVED")),
+			where: and(
+				eq(offerReviews.offer_id, offerId),
+				eq(offerReviews.mod_status, "APPROVED"),
+			),
 			columns: {
 				rating: true,
 				id: true,
@@ -76,11 +83,19 @@ export function createReviewService(deps: ReviewServiceDeps) {
 		return reviewsTransformed;
 	}
 
-	async function checkUserReviewExistsByOfferId(userId: number, offerId: number) {
+	async function checkUserReviewExistsByOfferId(
+		userId: number,
+		offerId: number,
+	) {
 		const result = await db
 			.select()
 			.from(offerReviews)
-			.where(and(eq(offerReviews.offer_id, offerId), eq(offerReviews.user_id, userId)))
+			.where(
+				and(
+					eq(offerReviews.offer_id, offerId),
+					eq(offerReviews.user_id, userId),
+				),
+			)
 			.limit(1);
 
 		return result.length > 0;

@@ -1,4 +1,11 @@
-import { boolean, integer, pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	integer,
+	pgTable,
+	serial,
+	timestamp,
+	varchar,
+} from "drizzle-orm/pg-core";
 
 import { users } from "./users.table";
 import { timestampColumns } from "../partials/timestampColumns";

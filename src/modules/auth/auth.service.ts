@@ -12,11 +12,18 @@ import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
 
 export function createAuthService(deps: AuthServiceDeps) {
-	const { profileService, tokenService, userService, verificationTokenService, emailService } =
-		deps;
+	const {
+		profileService,
+		tokenService,
+		userService,
+		verificationTokenService,
+		emailService,
+	} = deps;
 
 	async function register(payload: RegisterUserRequest) {
-		const isUserExisting = await userService.checkUserExistsByEmail(payload.email);
+		const isUserExisting = await userService.checkUserExistsByEmail(
+			payload.email,
+		);
 
 		if (isUserExisting) throw new ConflictError("Email already in use");
 
@@ -49,10 +56,11 @@ export function createAuthService(deps: AuthServiceDeps) {
 	}
 
 	async function verifyUserAndLogin(token: string) {
-		const { user, token: storedHashToken } = await userService.getUserWithValidVerificationToken(
-			token,
-			"email_verification",
-		);
+		const { user, token: storedHashToken } =
+			await userService.getUserWithValidVerificationToken(
+				token,
+				"email_verification",
+			);
 
 		if (!user) throw new BadRequestError("Invalid verification token.");
 
@@ -73,7 +81,10 @@ export function createAuthService(deps: AuthServiceDeps) {
 
 		if (!user) throw new InvalidCredentialsError();
 
-		const isPasswordValid = await hashUtil.password.compare(payload.password, user.password);
+		const isPasswordValid = await hashUtil.password.compare(
+			payload.password,
+			user.password,
+		);
 
 		if (!isPasswordValid) throw new InvalidCredentialsError();
 
@@ -86,7 +97,12 @@ export function createAuthService(deps: AuthServiceDeps) {
 		const accessToken = tokenService.issueAccessToken(user.id, userRole.role);
 		const refreshToken = await tokenService.issueRefreshToken(user.id, jti);
 
-		return { accessToken, refreshToken, isVerified: user.is_verified, email: user.email };
+		return {
+			accessToken,
+			refreshToken,
+			isVerified: user.is_verified,
+			email: user.email,
+		};
 	}
 
 	async function refresh(oldRefreshToken: string) {
@@ -95,14 +111,21 @@ export function createAuthService(deps: AuthServiceDeps) {
 
 		const isTokenInvalid = !storedToken || storedToken.revoked;
 
-		if (isTokenInvalid) throw new InvalidCredentialsError("Token has been revoked or is expired");
+		if (isTokenInvalid)
+			throw new InvalidCredentialsError("Token has been revoked or is expired");
 
 		const newJti = tokenService.generateJti();
 
 		const { role } = await userService.getUserRole(storedToken.user_id);
 
-		const accessToken = tokenService.issueAccessToken(storedToken.user_id, role);
-		const newRefreshToken = await tokenService.issueRefreshToken(storedToken.user_id, newJti);
+		const accessToken = tokenService.issueAccessToken(
+			storedToken.user_id,
+			role,
+		);
+		const newRefreshToken = await tokenService.issueRefreshToken(
+			storedToken.user_id,
+			newJti,
+		);
 
 		await tokenService.revokeRefreshToken(oldRefreshToken);
 
@@ -121,7 +144,10 @@ export function createAuthService(deps: AuthServiceDeps) {
 			return;
 		}
 
-		const token = await verificationTokenService.createVerificationToken(user.id, "password_reset");
+		const token = await verificationTokenService.createVerificationToken(
+			user.id,
+			"password_reset",
+		);
 
 		emailService.send({
 			to: user.email,
@@ -149,7 +175,10 @@ export function createAuthService(deps: AuthServiceDeps) {
 			throw new NotFoundError("Password reset request token not found");
 		}
 
-		const isTokenValidOrExists = hashUtil.token.compare(payload.token, user.token.token);
+		const isTokenValidOrExists = hashUtil.token.compare(
+			payload.token,
+			user.token.token,
+		);
 
 		if (!isTokenValidOrExists) {
 			throw new NotFoundError("Password reset request token not found");

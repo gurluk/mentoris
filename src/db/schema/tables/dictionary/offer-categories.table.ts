@@ -12,6 +12,9 @@ export const offerCategories = pgTable("offer_categories", {
 	...timestampColumns,
 });
 
-export const offerCategoriesRelations = relations(offerCategories, ({ many }) => ({
-	offersOfferCategories: many(offersOfferCategories),
-}));
+export const offerCategoriesRelations = relations(
+	offerCategories,
+	({ many }) => ({
+		offersOfferCategories: many(offersOfferCategories),
+	}),
+);

@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { date, integer, pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
+import {
+	date,
+	integer,
+	pgTable,
+	serial,
+	text,
+	varchar,
+} from "drizzle-orm/pg-core";
 
 import { users } from "./users.table";
 import { timestampColumns } from "../partials/timestampColumns";

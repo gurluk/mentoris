@@ -31,14 +31,19 @@ declare module "fastify" {
 		userService: UserService;
 
 		// Auth
-		authorize: (role: Role) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+		authorize: (
+			role: Role,
+		) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
 	}
 
 	interface FastifyRequest {
 		userId: number;
 	}
 	interface FastifyReply {
-		ok(options: { data: TData | undefined; meta?: TMeta | undefined }): FastifyReply;
+		ok(options: {
+			data: TData | undefined;
+			meta?: TMeta | undefined;
+		}): FastifyReply;
 		created(options: { data: TData | undefined }): FastifyReply;
 		noContent(): FastifyReply;
 	}

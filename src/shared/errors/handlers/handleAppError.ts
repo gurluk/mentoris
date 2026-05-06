@@ -1,6 +1,9 @@
 import { FastifyError, FastifyReply } from "fastify";
 
-import { buildErrorResponse, errorCodeToHttpStatus } from "~/utils/errorResponse.util";
+import {
+	buildErrorResponse,
+	errorCodeToHttpStatus,
+} from "~/utils/errorResponse.util";
 
 import { AppError } from "../base/AppError";
 

@@ -20,7 +20,10 @@ export function renderEmail(template: EmailTemplateParams) {
 	const templateSource = fs.readFileSync(templatePath, "utf8");
 
 	const compiled = Handlebars.compile(templateSource);
-	const html = compiled({ ...template.variables, year: new Date().getFullYear() });
+	const html = compiled({
+		...template.variables,
+		year: new Date().getFullYear(),
+	});
 
 	return html;
 }

@@ -4,7 +4,10 @@ import { ApiErrorCode } from "~/enums/apiCode.enum";
 import { PostgresErrorCode } from "~/enums/postgresErrorCode.enum";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
 
-export function unwrapResult<T>(rows: T[], message: string = "Resource not found"): T {
+export function unwrapResult<T>(
+	rows: T[],
+	message: string = "Resource not found",
+): T {
 	if (rows.length === 0) {
 		throw new NotFoundError(message);
 	}

@@ -11,7 +11,10 @@ import { TokenServiceDeps } from "./token.types";
 export function createVerificationTokensService(deps: TokenServiceDeps) {
 	const { db } = deps;
 
-	async function createVerificationToken(userId: number, context: VerificationTokenContext) {
+	async function createVerificationToken(
+		userId: number,
+		context: VerificationTokenContext,
+	) {
 		const MAX_TOKENS_PER_HOUR = 3;
 
 		// TODO Use redis in production
@@ -27,7 +30,9 @@ export function createVerificationTokensService(deps: TokenServiceDeps) {
 			);
 
 		if (Number(tokensCreatedCount) >= MAX_TOKENS_PER_HOUR) {
-			throw new TooManyRequestsError("Too many attempts. Please try again later.");
+			throw new TooManyRequestsError(
+				"Too many attempts. Please try again later.",
+			);
 		}
 
 		const token = generateUuid();
@@ -60,4 +65,6 @@ export function createVerificationTokensService(deps: TokenServiceDeps) {
 	};
 }
 
-export type VerificationTokenService = ReturnType<typeof createVerificationTokensService>;
+export type VerificationTokenService = ReturnType<
+	typeof createVerificationTokensService
+>;

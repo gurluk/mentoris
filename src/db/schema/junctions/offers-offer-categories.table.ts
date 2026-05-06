@@ -14,16 +14,21 @@ export const offersOfferCategories = pgTable(
 			.notNull()
 			.references(() => offerCategories.id, { onDelete: "cascade" }),
 	},
-	(table) => [primaryKey({ columns: [table.offer_id, table.offer_category_id] })],
+	(table) => [
+		primaryKey({ columns: [table.offer_id, table.offer_category_id] }),
+	],
 );
 
-export const offersOfferCategoriesRelations = relations(offersOfferCategories, ({ one }) => ({
-	offer: one(offers, {
-		fields: [offersOfferCategories.offer_id],
-		references: [offers.id],
+export const offersOfferCategoriesRelations = relations(
+	offersOfferCategories,
+	({ one }) => ({
+		offer: one(offers, {
+			fields: [offersOfferCategories.offer_id],
+			references: [offers.id],
+		}),
+		offerCategory: one(offerCategories, {
+			fields: [offersOfferCategories.offer_category_id],
+			references: [offerCategories.id],
+		}),
 	}),
-	offerCategory: one(offerCategories, {
-		fields: [offersOfferCategories.offer_category_id],
-		references: [offerCategories.id],
-	}),
-}));
+);

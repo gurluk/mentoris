@@ -14,7 +14,8 @@ export function createOfferService(deps: OfferServiceDeps) {
 	async function createOffer(body: CreateOfferRequest, userId: number) {
 		const existingOffer = await checkOfferExistsByUserId(userId);
 
-		if (existingOffer) throw new ConflictError("Offer already exists for this user");
+		if (existingOffer)
+			throw new ConflictError("Offer already exists for this user");
 
 		const { categoryIdList, levelIdList, ...offerData } = body;
 
@@ -58,7 +59,8 @@ export function createOfferService(deps: OfferServiceDeps) {
 	async function updateOffer(body: UpdateOfferRequest, userId: number) {
 		const existingOffer = await checkOfferExistsByUserId(userId);
 
-		if (!existingOffer) throw new NotFoundError("Offer you are trying to update does not exist");
+		if (!existingOffer)
+			throw new NotFoundError("Offer you are trying to update does not exist");
 
 		const { categoryIds, ...restBody } = body;
 
@@ -91,7 +93,11 @@ export function createOfferService(deps: OfferServiceDeps) {
 	}
 
 	async function checkOfferExistsByUserId(userId: number) {
-		const record = await db.select().from(offers).where(eq(offers.user_id, userId)).limit(1);
+		const record = await db
+			.select()
+			.from(offers)
+			.where(eq(offers.user_id, userId))
+			.limit(1);
 		return record.length > 0;
 	}
 

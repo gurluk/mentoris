@@ -7,7 +7,10 @@ import { buildErrorResponse } from "~/utils/errorResponse.util";
 
 import { mapValidationErrors } from "./mapValidationError";
 
-export function handleValidationError(error: FastifyError, reply: FastifyReply) {
+export function handleValidationError(
+	error: FastifyError,
+	reply: FastifyReply,
+) {
 	if (!(error.code === "FST_ERR_VALIDATION")) return false;
 
 	const mappedFieldErrors = mapValidationErrors(

@@ -33,9 +33,8 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 		url: "/login",
 		schema: loginRouteSchema,
 		handler: async function login(request, reply) {
-			const { accessToken, refreshToken, email, isVerified } = await app.authService.login(
-				request.body,
-			);
+			const { accessToken, refreshToken, email, isVerified } =
+				await app.authService.login(request.body);
 
 			reply
 				.setCookie("accessToken", accessToken, {
@@ -54,10 +53,14 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 		url: "/logout",
 		schema: logoutRouteSchema,
 		handler: async function logout(request, reply) {
-			const refreshToken = getSignedCookieOrThrow(app, request.cookies.refreshToken, {
-				missingMessage: "No refresh token cookie",
-				invalidMessage: "Invalid refresh token cookie",
-			});
+			const refreshToken = getSignedCookieOrThrow(
+				app,
+				request.cookies.refreshToken,
+				{
+					missingMessage: "No refresh token cookie",
+					invalidMessage: "Invalid refresh token cookie",
+				},
+			);
 
 			await app.authService.logout(refreshToken);
 
@@ -70,10 +73,14 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 		url: "/refresh",
 		schema: refreshAccessTokenRouteSchema,
 		handler: async function refreshToken(request, reply) {
-			const refreshToken = getSignedCookieOrThrow(app, request.cookies.refreshToken, {
-				missingMessage: "No refresh token in cookie",
-				invalidMessage: "Refresh token is not valid",
-			});
+			const refreshToken = getSignedCookieOrThrow(
+				app,
+				request.cookies.refreshToken,
+				{
+					missingMessage: "No refresh token in cookie",
+					invalidMessage: "Refresh token is not valid",
+				},
+			);
 
 			const { accessToken, refreshToken: nextRefreshToken } =
 				await app.authService.refresh(refreshToken);
@@ -95,9 +102,8 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 		url: "/verify-account",
 		schema: verifyAccountRouteSchema,
 		handler: async function verifyAccount(request, reply) {
-			const { accessToken, refreshToken } = await app.authService.verifyUserAndLogin(
-				request.query.token,
-			);
+			const { accessToken, refreshToken } =
+				await app.authService.verifyUserAndLogin(request.query.token);
 
 			reply
 				.setCookie("accessToken", accessToken, {

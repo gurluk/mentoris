@@ -22,7 +22,10 @@ export const applicationPlugin = fp(
 		const reviewService = createReviewService({ db });
 		const dictionaryService = createDictionaryService({ db });
 		const tokenService = createTokenService({ db, jwt });
-		const verificationTokenService = createVerificationTokensService({ db, jwt });
+		const verificationTokenService = createVerificationTokensService({
+			db,
+			jwt,
+		});
 		const profileService = createProfileService({ db });
 		const userService = createUserService({ db });
 		const authService = createAuthService({

@@ -1,4 +1,11 @@
-import { boolean, integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	integer,
+	pgTable,
+	serial,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 
 import { users } from "./users.table";
 import { VERIFICATION_TOKEN_CONTEXT_ENUM } from "../enums/db.enum.schema";

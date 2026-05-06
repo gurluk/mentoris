@@ -7,7 +7,8 @@ export function mapValidationErrors(
 	const fieldErrors: Record<string, string[]> = {};
 
 	for (const issue of issues) {
-		const field = issue.instancePath.replace(/^\//, "").replace(/\//g, ".") || "root";
+		const field =
+			issue.instancePath.replace(/^\//, "").replace(/\//g, ".") || "root";
 
 		if (!fieldErrors[field]) {
 			fieldErrors[field] = [];

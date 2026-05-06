@@ -41,7 +41,11 @@ export function createUserService(deps: UserServiceDeps) {
 	}
 
 	async function getUserByEmail(email: string) {
-		const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+		const [user] = await db
+			.select()
+			.from(users)
+			.where(eq(users.email, email))
+			.limit(1);
 
 		if (!user) throw new NotFoundError("User not found");
 
@@ -69,7 +73,11 @@ export function createUserService(deps: UserServiceDeps) {
 	}
 
 	async function checkUserExistsByEmail(email: CreateUserInput["email"]) {
-		const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+		const result = await db
+			.select()
+			.from(users)
+			.where(eq(users.email, email))
+			.limit(1);
 		return result.length > 0;
 	}
 
@@ -125,7 +133,8 @@ export function createUserService(deps: UserServiceDeps) {
 			)
 			.limit(1);
 
-		if (!result) throw new NotFoundError("Verification request token or user not found");
+		if (!result)
+			throw new NotFoundError("Verification request token or user not found");
 
 		return result;
 	}

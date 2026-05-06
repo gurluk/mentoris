@@ -12,11 +12,15 @@ export const UpdateOfferRequestSchema = createUpdateSchema(offers)
 		updated_at: true,
 	})
 	.extend({
-		categoryIds: z.array(z.number()).min(1, "At least one category must be selected").optional(),
+		categoryIds: z
+			.array(z.number())
+			.min(1, "At least one category must be selected")
+			.optional(),
 	})
 	.refine(
 		(payload) => {
-			if (payload.price_from_cents == null || payload.price_to_cents == null) return true;
+			if (payload.price_from_cents == null || payload.price_to_cents == null)
+				return true;
 			return payload.price_from_cents <= payload.price_to_cents;
 		},
 		{

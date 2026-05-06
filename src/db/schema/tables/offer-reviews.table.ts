@@ -14,7 +14,11 @@ export const offerReviews = pgTable("offer_reviews", {
 	offer_id: integer("offer_id")
 		.notNull()
 		.references(() => offers.id, { onDelete: "cascade" }),
-	rating: numeric("rating", { precision: 2, scale: 1, mode: "number" }).notNull(),
+	rating: numeric("rating", {
+		precision: 2,
+		scale: 1,
+		mode: "number",
+	}).notNull(),
 	description: text("description"),
 	...timestampColumns,
 	...modColumns,

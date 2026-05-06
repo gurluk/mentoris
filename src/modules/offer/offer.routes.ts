@@ -23,7 +23,10 @@ export const offerRoutes: FastifyPluginAsync = async (app: App) => {
 		schema: createOfferRouteSchema,
 		onRequest: authorizeUser,
 		handler: async function createOffer(request, reply) {
-			const offer = await app.offerService.createOffer(request.body, request.userId);
+			const offer = await app.offerService.createOffer(
+				request.body,
+				request.userId,
+			);
 			reply.created({ data: offer.id });
 		},
 	});
@@ -34,7 +37,10 @@ export const offerRoutes: FastifyPluginAsync = async (app: App) => {
 		schema: updateOfferRouteSchema,
 		onRequest: authorizeUser,
 		handler: async function updateOffer(request, reply) {
-			const offer = await app.offerService.updateOffer(request.body, request.userId);
+			const offer = await app.offerService.updateOffer(
+				request.body,
+				request.userId,
+			);
 			reply.ok({ data: offer });
 		},
 	});
@@ -55,7 +61,9 @@ export const offerRoutes: FastifyPluginAsync = async (app: App) => {
 		url: "/:offerId",
 		schema: getOfferByOfferIdRouteSchema,
 		handler: async function (request, reply) {
-			const offer = await app.offerService.getOfferByOfferId(request.params.offerId);
+			const offer = await app.offerService.getOfferByOfferId(
+				request.params.offerId,
+			);
 			reply.ok({ data: offer });
 		},
 	});

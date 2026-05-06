@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	integer,
+	pgTable,
+	serial,
+	varchar,
+} from "drizzle-orm/pg-core";
 
 import { userRoles } from "./dictionary/user-roles.table";
 import { profiles } from "./profiles.table";

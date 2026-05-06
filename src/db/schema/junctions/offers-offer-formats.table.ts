@@ -18,13 +18,16 @@ export const offersOfferFormats = pgTable(
 	(table) => [primaryKey({ columns: [table.offer_id, table.offer_format_id] })],
 );
 
-export const offersOfferFormatsRelations = relations(offersOfferFormats, ({ one }) => ({
-	offer: one(offers, {
-		fields: [offersOfferFormats.offer_id],
-		references: [offers.id],
+export const offersOfferFormatsRelations = relations(
+	offersOfferFormats,
+	({ one }) => ({
+		offer: one(offers, {
+			fields: [offersOfferFormats.offer_id],
+			references: [offers.id],
+		}),
+		offerFormat: one(offerFormats, {
+			fields: [offersOfferFormats.offer_format_id],
+			references: [offerFormats.id],
+		}),
 	}),
-	offerFormat: one(offerFormats, {
-		fields: [offersOfferFormats.offer_format_id],
-		references: [offerFormats.id],
-	}),
-}));
+);

@@ -33,7 +33,10 @@ export const profileRoutes: FastifyPluginAsync = async (app: App) => {
 		schema: updateProfileRouteSchema,
 		onRequest: authorizeUser,
 		handler: async function updateProfile(request, reply) {
-			const updatedProfile = await app.profileService.updateProfile(request.body, request.userId);
+			const updatedProfile = await app.profileService.updateProfile(
+				request.body,
+				request.userId,
+			);
 			const data = ProfileDtoSchema.parse(updatedProfile);
 			reply.ok({ data });
 		},

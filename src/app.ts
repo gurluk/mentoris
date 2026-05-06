@@ -1,5 +1,9 @@
 import Fastify from "fastify";
-import { serializerCompiler, validatorCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
+import {
+	serializerCompiler,
+	validatorCompiler,
+	ZodTypeProvider,
+} from "fastify-type-provider-zod";
 
 import { registerAppRoutes } from "~/app.router";
 import { env } from "~/env";

@@ -8,4 +8,6 @@ export const RequestPasswordResetRequestSchema = z
 	})
 	.strict();
 
-export type RequestPasswordResetRequest = z.infer<typeof RequestPasswordResetRequestSchema>;
+export type RequestPasswordResetRequest = z.infer<
+	typeof RequestPasswordResetRequestSchema
+>;

@@ -23,13 +23,18 @@ export function createProfileService(deps: ProfileServiceDeps) {
 			.values({ user_id: userId, ...body, dob: undefined })
 			.returning();
 
-		if (!profile) throw new NotFoundError("Doslo je do greske prilikom kreiranja profila");
+		if (!profile)
+			throw new NotFoundError("Doslo je do greske prilikom kreiranja profila");
 
 		return profile;
 	}
 
 	async function checkExistsProfileByUserId(userId: number) {
-		const result = await db.select().from(profiles).where(eq(profiles.user_id, userId)).limit(1);
+		const result = await db
+			.select()
+			.from(profiles)
+			.where(eq(profiles.user_id, userId))
+			.limit(1);
 		return result.length > 0;
 	}
 
@@ -37,7 +42,9 @@ export function createProfileService(deps: ProfileServiceDeps) {
 		const existingProfile = await checkExistsProfileByUserId(userId);
 
 		if (!existingProfile) {
-			throw new NotFoundError("Profile you are trying to update does not exist");
+			throw new NotFoundError(
+				"Profile you are trying to update does not exist",
+			);
 		}
 
 		const updatedProfile = await db

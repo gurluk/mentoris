@@ -26,7 +26,10 @@ export function createTokenService(deps: TokenServiceDeps) {
 		const expiresInMs = parseDurationMs(env.JWT_REFRESH_TOKEN_EXPIRES_IN);
 		const expiresAt = new Date(Date.now() + expiresInMs);
 
-		const refreshToken = jwt.sign({ jti: jti }, { expiresIn: env.JWT_REFRESH_TOKEN_EXPIRES_IN });
+		const refreshToken = jwt.sign(
+			{ jti: jti },
+			{ expiresIn: env.JWT_REFRESH_TOKEN_EXPIRES_IN },
+		);
 
 		await db.insert(refreshTokens).values({
 			jti: jti,

@@ -23,7 +23,9 @@ export const loginRouteSchema = createRouteSchema({
 	summary: "Login user",
 	body: LoginRequestSchema,
 	response: {
-		[HttpStatus.OK]: ApiResponseSchema(EmailDtoSchema.extend({ isVerified: z.boolean() })),
+		[HttpStatus.OK]: ApiResponseSchema(
+			EmailDtoSchema.extend({ isVerified: z.boolean() }),
+		),
 	},
 });
 export const logoutRouteSchema = createRouteSchema({

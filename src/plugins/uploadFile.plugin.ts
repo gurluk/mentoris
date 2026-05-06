@@ -65,4 +65,6 @@ const uploadPluginHandler: FastifyPluginAsync = async (app) => {
 	});
 };
 
-export const uploadFilePlugin = fp(uploadPluginHandler, { name: "upload-file-plugin" });
+export const uploadFilePlugin = fp(uploadPluginHandler, {
+	name: "upload-file-plugin",
+});

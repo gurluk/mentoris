@@ -2,7 +2,9 @@ import { ApiErrorCode } from "~/enums/apiCode.enum";
 import { HttpStatus } from "~/enums/httpStatus.enum";
 import { ErrorResponse } from "~/shared/schemas/responseError.schema";
 
-export function buildErrorResponse(error: Partial<ErrorResponse>): ErrorResponse {
+export function buildErrorResponse(
+	error: Partial<ErrorResponse>,
+): ErrorResponse {
 	return {
 		code: error.code ?? ApiErrorCode.INTERNAL_SERVER_ERROR,
 		message: error.message ?? "Internal Server Error",

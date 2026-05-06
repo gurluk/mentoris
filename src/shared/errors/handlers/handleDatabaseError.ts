@@ -3,7 +3,10 @@ import { FastifyError, FastifyReply } from "fastify";
 import { DatabaseError } from "pg";
 
 import { handleDatabaseError } from "~/utils/db.util";
-import { buildErrorResponse, errorCodeToHttpStatus } from "~/utils/errorResponse.util";
+import {
+	buildErrorResponse,
+	errorCodeToHttpStatus,
+} from "~/utils/errorResponse.util";
 
 export function handleDbError(error: FastifyError, reply: FastifyReply) {
 	if (!(error instanceof DrizzleQueryError)) return false;

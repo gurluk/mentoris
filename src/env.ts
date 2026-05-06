@@ -33,7 +33,10 @@ const schema = z.object({
 const parsed = schema.safeParse(process.env);
 
 if (!parsed.success) {
-	console.error("❌ Invalid environment variables:", JSON.stringify(parsed.error, null, 4));
+	console.error(
+		"❌ Invalid environment variables:",
+		JSON.stringify(parsed.error, null, 4),
+	);
 	process.exit(1);
 }
 
