@@ -2,7 +2,6 @@ import { eq } from "drizzle-orm";
 
 import { offers, offersOfferLevels } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
-import { singleOrNull } from "~/utils/db.util";
 
 import { CreateOfferRequest } from "./schemas/dto/create-offer.schema";
 import { UpdateOfferRequest } from "./schemas/dto/update-offer.schema";
@@ -12,11 +11,7 @@ type OfferRepositoryDeps = {
 };
 
 export function createOfferRepository({ db }: OfferRepositoryDeps) {
-	async function create(
-		data: CreateOfferRequest & {
-			userId: number;
-		},
-	) {
+	async function create(data: CreateOfferRequest, userId: number) {
 		return db.transaction(async (tx) => {
 			const [offer] = await tx
 				.insert(offers)
@@ -25,7 +20,7 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 					description: data.description,
 					price_from_cents: data.priceFromCents,
 					price_to_cents: data.priceToCents,
-					user_id: data.userId,
+					user_id: userId,
 				})
 				.returning();
 
@@ -52,11 +47,7 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 		});
 	}
 
-	async function update(
-		data: UpdateOfferRequest & {
-			userId: number;
-		},
-	) {
+	async function update(data: UpdateOfferRequest, userId: number) {
 		return db.transaction(async (tx) => {
 			const [offer] = await tx
 				.update(offers)
@@ -67,7 +58,7 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 					price_to_cents: data.price_to_cents,
 					updated_at: data.updated_at,
 				})
-				.where(eq(offers.user_id, data.userId))
+				.where(eq(offers.user_id, userId))
 				.returning();
 
 			// TODO fix
@@ -85,16 +76,6 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 
 			return offer;
 		});
-	}
-
-	async function checkOfferExistsByUserId(userId: number) {
-		const result = await db
-			.select()
-			.from(offers)
-			.where(eq(offers.user_id, userId))
-			.limit(1);
-
-		return singleOrNull(result);
 	}
 
 	async function findByUserId(userId: number) {
@@ -125,7 +106,7 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 	return {
 		create,
 		update,
-		checkOfferExistsByUserId,
+
 		findByUserId,
 		findByOfferId,
 	};

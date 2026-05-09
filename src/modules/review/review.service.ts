@@ -4,14 +4,19 @@ import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
 
 import type { ReviewRepository } from "./review.repository";
 import type { CreateReviewRequest } from "./schemas/dto/create-review.schema";
+import { OfferRepository } from "../offer/offer.repository";
 
 type ReviewServiceDeps = {
 	reviewRepository: ReviewRepository;
+	offerRepository: OfferRepository;
 };
 
-export function createReviewService({ reviewRepository }: ReviewServiceDeps) {
+export function createReviewService({
+	reviewRepository,
+	offerRepository,
+}: ReviewServiceDeps) {
 	async function createReview(payload: CreateReviewRequest, userId: number) {
-		const offer = await reviewRepository.findOfferById(payload.offerId);
+		const offer = await offerRepository.findByOfferId(payload.offerId);
 
 		if (!offer) throw new NotFoundError("Offer not found");
 
@@ -23,16 +28,9 @@ export function createReviewService({ reviewRepository }: ReviewServiceDeps) {
 			payload.offerId,
 		);
 
-		if (reviewExists) {
-			throw new ConflictError("Review already exists");
-		}
+		if (reviewExists) throw new ConflictError("Review already exists");
 
-		return reviewRepository.create({
-			userId,
-			offerId: payload.offerId,
-			rating: payload.rating,
-			description: payload.description,
-		});
+		return reviewRepository.create(payload, userId);
 	}
 
 	// TODO show review full

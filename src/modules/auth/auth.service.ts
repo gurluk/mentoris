@@ -10,7 +10,7 @@ import type { LoginRequest } from "./schemas/dto/login.schema";
 import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
 import { EmailService } from "../email/email.types";
-import { ProfileService } from "../profile/profile.types";
+import { ProfileService } from "../profile/profile.service";
 import { RefreshTokenRepository } from "../token/token/refreshToken.repository";
 import { TokenService } from "../token/token/token.service";
 import { VerificationTokenService } from "../token/verificationToken/verificationToken.service";

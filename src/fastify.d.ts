@@ -5,7 +5,7 @@ import { AuthService } from "./modules/auth/auth.service";
 import { DictionaryService } from "./modules/dictionary/dictionary.types";
 import { EmailService } from "./modules/email/email.types";
 import { OfferService } from "./modules/offer/offer.service";
-import { ProfileService } from "./modules/profile/profile.types";
+import { ProfileService } from "./modules/profile/profile.service";
 import { ReviewService } from "./modules/review/review.service";
 import { TokenService } from "./modules/token/token/token.service";
 import { VerificationTokenService } from "./modules/token/verificationToken/verificationToken.service";

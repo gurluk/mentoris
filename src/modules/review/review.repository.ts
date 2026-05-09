@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 
-import { offerReviews, offers } from "~/db/schema";
+import { offerReviews } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
 import { singleOrNull } from "~/utils/db.util";
 
@@ -11,29 +11,18 @@ type ReviewRepositoryDeps = {
 };
 
 export function createReviewRepository({ db }: ReviewRepositoryDeps) {
-	async function findOfferById(offerId: number) {
-		return db.query.offers.findFirst({
-			where: eq(offers.id, offerId),
-			columns: { id: true, user_id: true },
-		});
-	}
-
-	async function create(
-		data: CreateReviewRequest & {
-			userId: number;
-		},
-	) {
-		const result = await db
+	async function create(data: CreateReviewRequest, userId: number) {
+		const [createdReview] = await db
 			.insert(offerReviews)
 			.values({
-				user_id: data.userId,
+				user_id: userId,
 				offer_id: data.offerId,
 				rating: data.rating,
 				description: data.description,
 			})
 			.returning();
 
-		return singleOrNull(result);
+		return createdReview;
 	}
 
 	async function findAllActiveByOfferId(offerId: number) {
@@ -80,7 +69,6 @@ export function createReviewRepository({ db }: ReviewRepositoryDeps) {
 	}
 
 	return {
-		findOfferById,
 		create,
 		findAllActiveByOfferId,
 		checkUserReviewExistsByOfferId,

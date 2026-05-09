@@ -10,24 +10,22 @@ type OfferServiceDeps = {
 };
 
 export function createOfferService({ offerRepository }: OfferServiceDeps) {
-	async function createOffer(body: CreateOfferRequest, userId: number) {
-		const existingOffer =
-			await offerRepository.checkOfferExistsByUserId(userId);
+	async function createOffer(payload: CreateOfferRequest, userId: number) {
+		const existingOffer = await offerRepository.findByUserId(userId);
 
 		if (existingOffer)
 			throw new ConflictError("Offer already exists for this user");
 
-		return offerRepository.create({ ...body, userId });
+		return offerRepository.create(payload, userId);
 	}
 
-	async function updateOffer(body: UpdateOfferRequest, userId: number) {
-		const existingOffer =
-			await offerRepository.checkOfferExistsByUserId(userId);
+	async function updateOffer(payload: UpdateOfferRequest, userId: number) {
+		const existingOffer = await offerRepository.findByUserId(userId);
 
 		if (!existingOffer)
 			throw new NotFoundError("Offer you are trying to update does not exist");
 
-		return offerRepository.update({ ...body, userId });
+		return offerRepository.update(payload, userId);
 	}
 
 	async function getOfferByUserId(userId: number) {

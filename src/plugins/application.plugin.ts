@@ -5,6 +5,7 @@ import { createAuthService } from "~/modules/auth/auth.service";
 import { createDictionaryService } from "~/modules/dictionary/dictionary.service";
 import { createOfferRepository } from "~/modules/offer/offer.repository";
 import { createOfferService } from "~/modules/offer/offer.service";
+import { createProfileRepository } from "~/modules/profile/profile.repository";
 import { createProfileService } from "~/modules/profile/profile.service";
 import { createReviewRepository } from "~/modules/review/review.repository";
 import { createReviewService } from "~/modules/review/review.service";
@@ -21,6 +22,7 @@ export const applicationPlugin = fp(
 
 		// Repositories
 		const offerRepository = createOfferRepository({ db });
+		const profileRepository = createProfileRepository({ db });
 		const reviewRepository = createReviewRepository({ db });
 		const refreshTokenRepository = createRefreshTokenRepository({ db });
 		const verificationTokenRepository = createVerificationTokenRepository({
@@ -28,7 +30,10 @@ export const applicationPlugin = fp(
 		});
 
 		// Services
-		const reviewService = createReviewService({ reviewRepository });
+		const reviewService = createReviewService({
+			reviewRepository,
+			offerRepository,
+		});
 		const offerService = createOfferService({ offerRepository });
 		const dictionaryService = createDictionaryService({ db });
 		const tokenService = createTokenService({ jwt });
@@ -36,7 +41,7 @@ export const applicationPlugin = fp(
 			verificationTokenRepository,
 		});
 
-		const profileService = createProfileService({ db });
+		const profileService = createProfileService({ profileRepository });
 		const userService = createUserService({ db });
 		const authService = createAuthService({
 			refreshTokenRepository,
