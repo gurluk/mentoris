@@ -1,0 +1,25 @@
+{
+  "Repository Scaffold (DB + DI)": {
+    "prefix": "repo",
+    "body": [
+      "import { DB } from \"~/plugins/db.plugin\";",
+      "",
+      "type ${1:Name}RepositoryDeps = {",
+      "  db: DB;",
+      "};",
+      "",
+      "export function create${1:Name}Repository(deps: ${1:Name}RepositoryDeps) {",
+      "  const { db } = deps;",
+      "",
+      "  return {",
+      "    $2",
+      "  };",
+      "}",
+      "",
+      "export type ${1:Name}Repository = ReturnType<",
+      "  typeof create${1:Name}Repository",
+      ">;"
+    ],
+    "description": "Minimal repository scaffold with DB dependency"
+  }
+}
