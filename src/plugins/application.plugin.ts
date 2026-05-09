@@ -5,6 +5,7 @@ import { createAuthService } from "~/modules/auth/auth.service";
 import { createDictionaryService } from "~/modules/dictionary/dictionary.service";
 import { createOfferService } from "~/modules/offer/offer.service";
 import { createProfileService } from "~/modules/profile/profile.service";
+import { createReviewRepository } from "~/modules/review/review.repository";
 import { createReviewService } from "~/modules/review/review.service";
 import { createRefreshTokenRepository } from "~/modules/token/token/refreshToken.repository";
 import { createTokenService } from "~/modules/token/token/token.service";
@@ -18,14 +19,15 @@ export const applicationPlugin = fp(
 		const { db, jwt, emailProvider } = app;
 
 		// Repositories
+		const reviewRepository = createReviewRepository({ db });
 		const refreshTokenRepository = createRefreshTokenRepository({ db });
 		const verificationTokenRepository = createVerificationTokenRepository({
 			db,
 		});
 
 		// Services
+		const reviewService = createReviewService({ reviewRepository });
 		const offerService = createOfferService({ db });
-		const reviewService = createReviewService({ db });
 		const dictionaryService = createDictionaryService({ db });
 		const tokenService = createTokenService({ jwt });
 		const verificationTokenService = createVerificationTokenService({

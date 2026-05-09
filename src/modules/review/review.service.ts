@@ -1,19 +1,15 @@
-import { DB } from "~/plugins/db.plugin";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { ForbiddenError } from "~/shared/errors/generic/ForbiddenError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
 
-import { createReviewRepository } from "./review.repository";
+import type { ReviewRepository } from "./review.repository";
 import type { CreateReviewRequest } from "./schemas/dto/create-review.schema";
 
 type ReviewServiceDeps = {
-	db: DB;
+	reviewRepository: ReviewRepository;
 };
 
-export function createReviewService(deps: ReviewServiceDeps) {
-	const { db } = deps;
-	const reviewRepository = createReviewRepository({ db });
-
+export function createReviewService({ reviewRepository }: ReviewServiceDeps) {
 	async function createReview(payload: CreateReviewRequest, userId: number) {
 		const offer = await reviewRepository.findOfferById(payload.offerId);
 
