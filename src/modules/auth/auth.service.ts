@@ -10,7 +10,7 @@ import type { LoginRequest } from "./schemas/dto/login.schema";
 import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
 import { EmailService } from "../email/email.types";
-import { ProfileService } from "../profile/profile.service";
+import { ProfileRepository } from "../profile/profile.repository";
 import { RefreshTokenRepository } from "../token/token/refreshToken.repository";
 import { TokenService } from "../token/token/token.service";
 import { VerificationTokenService } from "../token/verificationToken/verificationToken.service";
@@ -20,16 +20,16 @@ export type AuthServiceDeps = {
 	userService: UserService;
 	verificationTokenService: VerificationTokenService;
 	tokenService: TokenService;
-	profileService: ProfileService;
+	profileRepository: ProfileRepository;
 	emailProvider: EmailService;
 	refreshTokenRepository: RefreshTokenRepository;
 };
 
 export function createAuthService({
-	profileService,
 	tokenService,
 	userService,
 	verificationTokenService,
+	profileRepository,
 	refreshTokenRepository,
 	emailProvider,
 }: AuthServiceDeps) {
@@ -47,7 +47,7 @@ export function createAuthService({
 		const newUser = await userService.createUser(payload.email, hashedPassword);
 
 		// TODO switch for repo method
-		await profileService.createProfile({ name: payload.name }, newUser.id);
+		await profileRepository.create({ name: payload.name }, newUser.id);
 
 		const token = await verificationTokenService.createVerificationToken(
 			newUser.id,

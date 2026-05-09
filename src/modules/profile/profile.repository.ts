@@ -13,31 +13,22 @@ type ProfileRepositoryDeps = {
 
 export function createProfileRepository({ db }: ProfileRepositoryDeps) {
 	async function create(data: CreateProfileRequest, userId: number) {
-		const result = await db
+		const [createdProfile] = await db
 			.insert(profiles)
 			.values({
 				user_id: userId,
 				name: data.name,
 				bio: data.bio,
+				// TODO dob? how we handle dates in our app with UTC?
 				dob: undefined,
 			})
 			.returning();
 
-		return singleOrNull(result);
-	}
-
-	async function checkExistsProfileByUserId(userId: number) {
-		const result = await db
-			.select()
-			.from(profiles)
-			.where(eq(profiles.user_id, userId))
-			.limit(1);
-
-		return singleOrNull(result);
+		return createdProfile;
 	}
 
 	async function update(data: UpdateProfileRequest, userId: number) {
-		const result = await db
+		const [updatedProfile] = await db
 			.update(profiles)
 			.set({
 				name: data.name,
@@ -48,18 +39,21 @@ export function createProfileRepository({ db }: ProfileRepositoryDeps) {
 			.where(eq(profiles.user_id, userId))
 			.returning();
 
-		return singleOrNull(result);
+		return updatedProfile;
 	}
 
 	async function findByUserId(userId: number) {
-		return db.query.profiles.findFirst({
-			where: eq(profiles.user_id, userId),
-		});
+		const result = await db
+			.select()
+			.from(profiles)
+			.where(eq(profiles.user_id, userId))
+			.limit(1);
+
+		return singleOrNull(result);
 	}
 
 	return {
 		create,
-		checkExistsProfileByUserId,
 		update,
 		findByUserId,
 	};

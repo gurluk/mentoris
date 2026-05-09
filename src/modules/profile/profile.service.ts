@@ -14,8 +14,7 @@ export function createProfileService({
 }: ProfileServiceDeps) {
 	// TODO sanitize multipart fields, trim and clear up
 	async function createProfile(payload: CreateProfileRequest, userId: number) {
-		const existingProfile =
-			await profileRepository.checkExistsProfileByUserId(userId);
+		const existingProfile = await profileRepository.findByUserId(userId);
 
 		if (existingProfile) throw new ConflictError("Korisnik već postoji");
 
@@ -27,13 +26,8 @@ export function createProfileService({
 		return profile;
 	}
 
-	async function checkExistsProfileByUserId(userId: number) {
-		return profileRepository.checkExistsProfileByUserId(userId);
-	}
-
 	async function updateProfile(payload: UpdateProfileRequest, userId: number) {
-		const existingProfile =
-			await profileRepository.checkExistsProfileByUserId(userId);
+		const existingProfile = await profileRepository.findByUserId(userId);
 
 		if (!existingProfile) {
 			throw new NotFoundError(
@@ -46,9 +40,7 @@ export function createProfileService({
 
 	async function getProfile(userId: number) {
 		const profile = await profileRepository.findByUserId(userId);
-
 		if (!profile) throw new NotFoundError("Profile not found.");
-
 		return profile;
 	}
 
@@ -56,7 +48,6 @@ export function createProfileService({
 		getProfile,
 		createProfile,
 		updateProfile,
-		checkExistsProfileByUserId,
 	};
 }
 

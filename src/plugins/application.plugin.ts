@@ -45,8 +45,8 @@ export const applicationPlugin = fp(
 		const userService = createUserService({ db });
 		const authService = createAuthService({
 			refreshTokenRepository,
+			profileRepository,
 			emailProvider,
-			profileService,
 			tokenService,
 			userService,
 			verificationTokenService,
