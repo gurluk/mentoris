@@ -7,8 +7,8 @@ import { DictionaryService } from "~/modules/dictionary/dictionary.types";
 import { OfferService } from "~/modules/offer/offer.types";
 import { ProfileService } from "~/modules/profile/profile.types";
 import { ReviewService } from "~/modules/review/review.types";
-import { TokenService } from "~/modules/token/token.types";
-import { VerificationTokenService } from "~/modules/token/verificationToken.services";
+import { TokenService } from "~/modules/token/token/token.types";
+import { VerificationTokenService } from "~/modules/token/verificationToken/verificationToken.service";
 import { UserService } from "~/modules/user/user.types";
 
 import { AppDb } from "./db.types";
@@ -20,7 +20,7 @@ declare module "fastify" {
 		db: AppDb;
 
 		// Services
-		emailService: EmailService;
+		emailProvider: EmailService;
 		authService: AuthService;
 		offerService: OfferService;
 		reviewService: ReviewService;

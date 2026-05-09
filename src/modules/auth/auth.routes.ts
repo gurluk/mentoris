@@ -1,10 +1,8 @@
 import { FastifyPluginAsync } from "fastify";
 
-import { env } from "~/env";
 import type { ResendVerificationLinkRequest } from "~/modules/auth/schemas/dto/resend-verification-link.schema";
 import { App } from "~/types/app.types";
 import { getSignedCookieOrThrow } from "~/utils/cookie.util";
-import { parseDurationMs } from "~/utils/datetime.util";
 
 import {
 	loginRouteSchema,
@@ -16,6 +14,10 @@ import {
 	resetPasswordRouteSchema,
 	verifyAccountRouteSchema,
 } from "./schemas/route/auth-routes.schema";
+import {
+	ACCESS_TOKEN_TTL_MS,
+	REFRESH_TOKEN_TTL_MS,
+} from "../token/token/token.constant";
 
 export const authRoutes: FastifyPluginAsync = async (app: App) => {
 	app.route({
@@ -38,10 +40,10 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 
 			reply
 				.setCookie("accessToken", accessToken, {
-					maxAge: parseDurationMs(env.JWT_ACCESS_TOKEN_EXPIRES_IN),
+					maxAge: ACCESS_TOKEN_TTL_MS,
 				})
 				.setCookie("refreshToken", refreshToken, {
-					maxAge: parseDurationMs(env.JWT_REFRESH_TOKEN_EXPIRES_IN),
+					maxAge: REFRESH_TOKEN_TTL_MS,
 				});
 
 			reply.ok({ data: { email, isVerified } });
@@ -87,10 +89,10 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 
 			reply
 				.setCookie("accessToken", accessToken, {
-					maxAge: parseDurationMs(env.JWT_ACCESS_TOKEN_EXPIRES_IN),
+					maxAge: ACCESS_TOKEN_TTL_MS,
 				})
 				.setCookie("refreshToken", nextRefreshToken, {
-					maxAge: parseDurationMs(env.JWT_REFRESH_TOKEN_EXPIRES_IN),
+					maxAge: REFRESH_TOKEN_TTL_MS,
 				});
 
 			reply.noContent();
@@ -107,10 +109,10 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 
 			reply
 				.setCookie("accessToken", accessToken, {
-					maxAge: parseDurationMs(env.JWT_ACCESS_TOKEN_EXPIRES_IN),
+					maxAge: ACCESS_TOKEN_TTL_MS,
 				})
 				.setCookie("refreshToken", refreshToken, {
-					maxAge: parseDurationMs(env.JWT_REFRESH_TOKEN_EXPIRES_IN),
+					maxAge: REFRESH_TOKEN_TTL_MS,
 				});
 
 			reply.noContent();

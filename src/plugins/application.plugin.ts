@@ -6,30 +6,37 @@ import { createDictionaryService } from "~/modules/dictionary/dictionary.service
 import { createOfferService } from "~/modules/offer/offer.service";
 import { createProfileService } from "~/modules/profile/profile.service";
 import { createReviewService } from "~/modules/review/review.service";
-import { createTokenService } from "~/modules/token/token.service";
-import { createVerificationTokensService } from "~/modules/token/verificationToken.services";
+import { createRefreshTokenRepository } from "~/modules/token/token/refreshToken.repository";
+import { createTokenService } from "~/modules/token/token/token.service";
+import { createVerificationTokenRepository } from "~/modules/token/verificationToken/verificationToken.repository";
+import { createVerificationTokenService } from "~/modules/token/verificationToken/verificationToken.service";
 import { createUserService } from "~/modules/user/user.service";
 
 export const applicationPlugin = fp(
 	async (app: FastifyInstance) => {
-		// App attached services/plugins
-		const db = app.db;
-		const jwt = app.jwt;
-		const emailService = app.emailService;
+		// Plugins
+		const { db, jwt, emailProvider } = app;
+
+		// Repositories
+		const refreshTokenRepository = createRefreshTokenRepository({ db });
+		const verificationTokenRepository = createVerificationTokenRepository({
+			db,
+		});
 
 		// Services
 		const offerService = createOfferService({ db });
 		const reviewService = createReviewService({ db });
 		const dictionaryService = createDictionaryService({ db });
-		const tokenService = createTokenService({ db, jwt });
-		const verificationTokenService = createVerificationTokensService({
-			db,
-			jwt,
+		const tokenService = createTokenService({ jwt });
+		const verificationTokenService = createVerificationTokenService({
+			verificationTokenRepository,
 		});
+
 		const profileService = createProfileService({ db });
 		const userService = createUserService({ db });
 		const authService = createAuthService({
-			emailService,
+			refreshTokenRepository,
+			emailProvider,
 			profileService,
 			tokenService,
 			userService,

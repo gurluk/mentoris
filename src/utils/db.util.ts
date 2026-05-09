@@ -46,3 +46,7 @@ export function handleDatabaseError(error: DatabaseError): {
 			};
 	}
 }
+
+export function singleOrNull<T>(rows: T[]): T | null {
+	return rows[0] ?? null;
+}

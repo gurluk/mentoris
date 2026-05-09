@@ -26,3 +26,8 @@ export function minutesFromNow(minutes: number): Date {
 	expires.setMinutes(expires.getMinutes() + minutes);
 	return expires;
 }
+
+// Get date with offset ms from now
+export function msFromNow(ms: number): Date {
+	return new Date(Date.now() + ms);
+}

@@ -4,12 +4,14 @@ import { InvalidCredentialsError } from "~/shared/errors/domain/InvalidCredentia
 import { BadRequestError } from "~/shared/errors/generic/BadRequestError";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
+import { msFromNow } from "~/utils/datetime.util";
 import { hashUtil } from "~/utils/hash.util";
 
 import { AuthServiceDeps } from "./auth.types";
 import type { LoginRequest } from "./schemas/dto/login.schema";
 import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
+import { REFRESH_TOKEN_TTL_MS } from "../token/token/token.constant";
 
 export function createAuthService(deps: AuthServiceDeps) {
 	const {
@@ -17,10 +19,12 @@ export function createAuthService(deps: AuthServiceDeps) {
 		tokenService,
 		userService,
 		verificationTokenService,
-		emailService,
+		refreshTokenRepository,
+		emailProvider,
 	} = deps;
 
 	async function register(payload: RegisterUserRequest) {
+		// TODO switch for repo method
 		const isUserExisting = await userService.checkUserExistsByEmail(
 			payload.email,
 		);
@@ -29,11 +33,13 @@ export function createAuthService(deps: AuthServiceDeps) {
 
 		const hashedPassword = await hashUtil.password.hash(payload.password);
 
+		// TODO switch for repo method
 		const newUser = await userService.createUser({
 			email: payload.email,
 			password: hashedPassword,
 		});
 
+		// TODO switch for repo method
 		await profileService.createProfile({ name: payload.name }, newUser.id);
 
 		const token = await verificationTokenService.createVerificationToken(
@@ -41,7 +47,7 @@ export function createAuthService(deps: AuthServiceDeps) {
 			"email_verification",
 		);
 
-		emailService.send({
+		emailProvider.send({
 			to: newUser.email,
 			// TODO environment domain/host, just needs to pass the token
 			template: {
@@ -71,7 +77,14 @@ export function createAuthService(deps: AuthServiceDeps) {
 		const { role } = await userService.getUserRole(user.id);
 
 		const accessToken = tokenService.issueAccessToken(user.id, role);
-		const refreshToken = await tokenService.issueRefreshToken(user.id, jti);
+
+		const refreshToken = await tokenService.issueRefreshToken(jti);
+
+		await refreshTokenRepository.create({
+			jti,
+			userId: user.id,
+			expiresAt: msFromNow(REFRESH_TOKEN_TTL_MS),
+		});
 
 		return { accessToken, refreshToken };
 	}
@@ -87,7 +100,6 @@ export function createAuthService(deps: AuthServiceDeps) {
 		);
 
 		if (!isPasswordValid) throw new InvalidCredentialsError();
-
 		if (!user.is_verified) throw new AccountNotVerifiedError();
 
 		const jti = tokenService.generateJti();
@@ -95,7 +107,13 @@ export function createAuthService(deps: AuthServiceDeps) {
 		const userRole = await userService.getUserRole(user.id);
 
 		const accessToken = tokenService.issueAccessToken(user.id, userRole.role);
-		const refreshToken = await tokenService.issueRefreshToken(user.id, jti);
+		const refreshToken = await tokenService.issueRefreshToken(jti);
+
+		await refreshTokenRepository.create({
+			jti,
+			userId: user.id,
+			expiresAt: msFromNow(REFRESH_TOKEN_TTL_MS),
+		});
 
 		return {
 			accessToken,
@@ -107,7 +125,8 @@ export function createAuthService(deps: AuthServiceDeps) {
 
 	async function refresh(oldRefreshToken: string) {
 		const payload = tokenService.verifyRefreshToken(oldRefreshToken);
-		const storedToken = await tokenService.getRefreshTokenByJti(payload.jti);
+
+		const storedToken = await refreshTokenRepository.findByJti(payload.jti);
 
 		const isTokenInvalid = !storedToken || storedToken.revoked;
 
@@ -122,18 +141,23 @@ export function createAuthService(deps: AuthServiceDeps) {
 			storedToken.user_id,
 			role,
 		);
-		const newRefreshToken = await tokenService.issueRefreshToken(
-			storedToken.user_id,
-			newJti,
-		);
 
-		await tokenService.revokeRefreshToken(oldRefreshToken);
+		const newRefreshToken = await tokenService.issueRefreshToken(newJti);
+
+		await refreshTokenRepository.revokeByJti(payload.jti);
+
+		await refreshTokenRepository.create({
+			jti: newJti,
+			userId: storedToken.user_id,
+			expiresAt: msFromNow(REFRESH_TOKEN_TTL_MS),
+		});
 
 		return { accessToken, refreshToken: newRefreshToken };
 	}
 
 	async function logout(refreshToken: string) {
-		await tokenService.revokeRefreshToken(refreshToken);
+		const payload = tokenService.verifyRefreshToken(refreshToken);
+		await refreshTokenRepository.revokeByJti(payload.jti);
 	}
 
 	async function requestResetPassword(email: string) {
@@ -149,7 +173,7 @@ export function createAuthService(deps: AuthServiceDeps) {
 			"password_reset",
 		);
 
-		emailService.send({
+		emailProvider.send({
 			to: user.email,
 			template: {
 				name: "resetPasswordTemplate",
@@ -164,31 +188,29 @@ export function createAuthService(deps: AuthServiceDeps) {
 	}
 
 	async function resetPassword(payload: ResetPasswordRequest) {
-		const hashedPayloadToken = hashUtil.token.hash(payload.token);
-
-		const user = await userService.getUserWithValidVerificationToken(
-			hashedPayloadToken,
+		const verificationToken = await verificationTokenService.findToken(
+			payload.token,
 			"password_reset",
 		);
 
-		if (!user) {
-			throw new NotFoundError("Password reset request token not found");
-		}
+		if (!verificationToken?.token)
+			throw new BadRequestError("Invalid verification token");
 
-		const isTokenValidOrExists = hashUtil.token.compare(
+		const isTokenValid = hashUtil.token.compare(
 			payload.token,
-			user.token.token,
+			verificationToken.token,
 		);
 
-		if (!isTokenValidOrExists) {
-			throw new NotFoundError("Password reset request token not found");
-		}
-
-		await verificationTokenService.markTokenUsed(hashedPayloadToken);
+		if (!isTokenValid) throw new BadRequestError("Invalid verification token");
 
 		const hashedNewPassword = await hashUtil.password.hash(payload.newPassword);
 
-		await userService.updateUserPassword(user.user.id, hashedNewPassword);
+		await userService.updateUserPassword(
+			verificationToken.user_id,
+			hashedNewPassword,
+		);
+
+		await verificationTokenService.markTokenUsed(payload.token);
 	}
 
 	async function resendVerificationLink(email: string) {
@@ -203,7 +225,7 @@ export function createAuthService(deps: AuthServiceDeps) {
 			"email_verification",
 		);
 
-		emailService.send({
+		emailProvider.send({
 			to: user.email,
 			template: {
 				name: "verifyAccountTemplate",

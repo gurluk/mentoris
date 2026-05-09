@@ -1,8 +1,9 @@
 import { createAuthService } from "./auth.service";
 import { EmailService } from "../email/email.types";
 import { ProfileService } from "../profile/profile.types";
-import { TokenService } from "../token/token.types";
-import { VerificationTokenService } from "../token/verificationToken.services";
+import { RefreshTokenRepository } from "../token/token/refreshToken.repository";
+import { TokenService } from "../token/token/token.service";
+import { VerificationTokenService } from "../token/verificationToken/verificationToken.service";
 import { UserService } from "../user/user.types";
 
 export type AuthService = ReturnType<typeof createAuthService>;
@@ -12,5 +13,6 @@ export type AuthServiceDeps = {
 	verificationTokenService: VerificationTokenService;
 	tokenService: TokenService;
 	profileService: ProfileService;
-	emailService: EmailService;
+	emailProvider: EmailService;
+	refreshTokenRepository: RefreshTokenRepository;
 };

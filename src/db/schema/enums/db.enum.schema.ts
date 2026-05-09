@@ -14,4 +14,5 @@ export const STATUS_ENUM = pgEnum("mod_status", [
 
 export type VerificationTokenContext =
 	(typeof VERIFICATION_TOKEN_CONTEXT_ENUM.enumValues)[number];
+
 export type ModStatus = (typeof STATUS_ENUM.enumValues)[number];
