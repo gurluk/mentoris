@@ -11,13 +11,12 @@ import { TokenService } from "~/modules/token/token/token.types";
 import { VerificationTokenService } from "~/modules/token/verificationToken/verificationToken.service";
 import { UserService } from "~/modules/user/user.types";
 
-import { AppDb } from "./db.types";
-import { JwtPayload } from "./jwt.types";
+import { DB } from "./plugins/db.plugin";
 
 declare module "fastify" {
 	interface FastifyInstance {
-		// DB
-		db: AppDb;
+		// Database
+		db: DB;
 
 		// Services
 		emailProvider: EmailService;
@@ -40,17 +39,21 @@ declare module "fastify" {
 		userId: number;
 	}
 	interface FastifyReply {
+		created(options: { data: TData | undefined }): FastifyReply;
+		noContent(): FastifyReply;
 		ok(options: {
 			data: TData | undefined;
 			meta?: TMeta | undefined;
 		}): FastifyReply;
-		created(options: { data: TData | undefined }): FastifyReply;
-		noContent(): FastifyReply;
 	}
 }
 
 declare module "@fastify/jwt" {
 	interface FastifyJWT {
-		payload: JwtPayload;
+		payload: {
+			sub?: string;
+			jti?: string;
+			role?: string;
+		};
 	}
 }

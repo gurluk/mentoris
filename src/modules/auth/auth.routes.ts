@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 
+import { App } from "~/app";
 import type { ResendVerificationLinkRequest } from "~/modules/auth/schemas/dto/resend-verification-link.schema";
-import { App } from "~/types/app.types";
 import { getSignedCookieOrThrow } from "~/utils/cookie.util";
 
 import {

@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 import { Pool } from "pg";
@@ -6,7 +6,8 @@ import { Pool } from "pg";
 import * as schema from "~/db/schema";
 import { env } from "~/env";
 
-// TODO remove schemas from db plugin
+export type DB = NodePgDatabase<typeof schema>;
+
 const databaseClient = async (fastify: FastifyInstance) => {
 	// Create pool
 	const pool = new Pool({ connectionString: env.DATABASE_URL });

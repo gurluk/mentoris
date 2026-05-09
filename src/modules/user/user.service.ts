@@ -7,15 +7,15 @@ import {
 	type VerificationTokenContext,
 	verificationTokens,
 } from "~/db/schema";
+import { DB } from "~/plugins/db.plugin";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { AppDb } from "~/types/db.types";
 import { unwrapResult } from "~/utils/db.util";
 import { hashUtil } from "~/utils/hash.util";
 
 import { ROLES, Role } from "../auth/auth.constants";
 
 type UserServiceDeps = {
-	db: AppDb;
+	db: DB;
 };
 
 export function createUserService({ db }: UserServiceDeps) {

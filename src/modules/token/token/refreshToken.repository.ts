@@ -1,14 +1,14 @@
 import { eq } from "drizzle-orm";
 
 import { refreshTokens } from "~/db/schema";
-import { AppDb } from "~/types/db.types";
+import { DB } from "~/plugins/db.plugin";
 import { msFromNow } from "~/utils/datetime.util";
 import { singleOrNull } from "~/utils/db.util";
 
 import { REFRESH_TOKEN_TTL_MS } from "./token.constant";
 
 type RefreshTokenRepositoryDeps = {
-	db: AppDb;
+	db: DB;
 };
 
 export function createRefreshTokenRepository(deps: RefreshTokenRepositoryDeps) {

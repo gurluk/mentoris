@@ -1,11 +1,11 @@
-import { AppDb } from "~/types/db.types";
+import { DB } from "~/plugins/db.plugin";
 
 import { createReviewService } from "./review.service";
 
 export type ReviewService = ReturnType<typeof createReviewService>;
 
 export type ReviewServiceDeps = {
-	db: AppDb;
+	db: DB;
 };
 
 // TODO deps

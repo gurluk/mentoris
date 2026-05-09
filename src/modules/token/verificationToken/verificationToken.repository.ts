@@ -1,11 +1,11 @@
 import { and, eq, gt, sql } from "drizzle-orm";
 
 import { type VerificationTokenContext, verificationTokens } from "~/db/schema";
-import { AppDb } from "~/types/db.types";
+import { DB } from "~/plugins/db.plugin";
 import { singleOrNull } from "~/utils/db.util";
 
 type VerificationTokenRepositoryDeps = {
-	db: AppDb;
+	db: DB;
 };
 
 export function createVerificationTokenRepository(

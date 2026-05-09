@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 
-import { App } from "~/types/app.types";
+import { App } from "~/app";
 
 import {
 	createReviewRouteSchema,

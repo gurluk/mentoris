@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 
-import { App } from "~/types/app.types";
+import { App } from "~/app";
 import { createAuthGuards } from "~/utils/createAuthGuards.util";
 
 import { ProfileDtoSchema } from "./schemas/dto/profile.dto";

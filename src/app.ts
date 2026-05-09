@@ -19,6 +19,8 @@ import { responsePlugin } from "./plugins/response.plugin";
 import { swaggerPlugin } from "./plugins/swagger.plugin";
 import { uploadFilePlugin } from "./plugins/uploadFile.plugin";
 
+export type App = Awaited<ReturnType<typeof buildApp>>;
+
 export async function buildApp() {
 	const baseApp = Fastify({ keepAliveTimeout: 30000 });
 	const app = baseApp.withTypeProvider<ZodTypeProvider>();
