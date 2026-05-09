@@ -20,8 +20,8 @@ export type AuthServiceDeps = {
 	userService: UserService;
 	verificationTokenService: VerificationTokenService;
 	tokenService: TokenService;
-	profileRepository: ProfileRepository;
 	emailProvider: EmailService;
+	profileRepository: ProfileRepository;
 	refreshTokenRepository: RefreshTokenRepository;
 };
 
@@ -68,6 +68,42 @@ export function createAuthService({
 		return { userId: newUser.id, email: newUser.email };
 	}
 
+	async function login(payload: LoginRequest) {
+		const user = await userService.getUserByEmail(payload.email);
+
+		if (!user) throw new InvalidCredentialsError();
+
+		const isPasswordValid = await hashUtil.password.compare(
+			payload.password,
+			user.password,
+		);
+
+		if (!isPasswordValid) throw new InvalidCredentialsError();
+		if (!user.is_verified) throw new AccountNotVerifiedError();
+
+		const jti = tokenService.generateJti();
+		const userRole = await userService.getUserRole(user.id);
+		const accessToken = tokenService.signAccessToken(user.id, userRole.role);
+		const refreshToken = tokenService.signRefreshToken(jti);
+
+		await refreshTokenRepository.create({
+			jti,
+			userId: user.id,
+		});
+
+		return {
+			accessToken,
+			refreshToken,
+			isVerified: user.is_verified,
+			email: user.email,
+		};
+	}
+
+	async function logout(refreshToken: string) {
+		const payload = tokenService.verifyRefreshToken(refreshToken);
+		await refreshTokenRepository.revokeByJti(payload.jti);
+	}
+
 	async function verifyUserAndLogin(token: string) {
 		const { user, token: storedHashToken } =
 			await userService.getUserWithValidVerificationToken(
@@ -85,8 +121,7 @@ export function createAuthService({
 		const { role } = await userService.getUserRole(user.id);
 
 		const accessToken = tokenService.signAccessToken(user.id, role);
-
-		const refreshToken = await tokenService.signRefreshToken(jti);
+		const refreshToken = tokenService.signRefreshToken(jti);
 
 		await refreshTokenRepository.create({
 			jti,
@@ -94,39 +129,6 @@ export function createAuthService({
 		});
 
 		return { accessToken, refreshToken };
-	}
-
-	async function login(payload: LoginRequest) {
-		const user = await userService.getUserByEmail(payload.email);
-
-		if (!user) throw new InvalidCredentialsError();
-
-		const isPasswordValid = await hashUtil.password.compare(
-			payload.password,
-			user.password,
-		);
-
-		if (!isPasswordValid) throw new InvalidCredentialsError();
-		if (!user.is_verified) throw new AccountNotVerifiedError();
-
-		const jti = tokenService.generateJti();
-
-		const userRole = await userService.getUserRole(user.id);
-
-		const accessToken = tokenService.signAccessToken(user.id, userRole.role);
-		const refreshToken = await tokenService.signRefreshToken(jti);
-
-		await refreshTokenRepository.create({
-			jti,
-			userId: user.id,
-		});
-
-		return {
-			accessToken,
-			refreshToken,
-			isVerified: user.is_verified,
-			email: user.email,
-		};
 	}
 
 	async function refresh(oldRefreshToken: string) {
@@ -144,8 +146,7 @@ export function createAuthService({
 		const { role } = await userService.getUserRole(storedToken.user_id);
 
 		const accessToken = tokenService.signAccessToken(storedToken.user_id, role);
-
-		const newRefreshToken = await tokenService.signRefreshToken(newJti);
+		const newRefreshToken = tokenService.signRefreshToken(newJti);
 
 		await refreshTokenRepository.revokeByJti(payload.jti);
 
@@ -155,11 +156,6 @@ export function createAuthService({
 		});
 
 		return { accessToken, refreshToken: newRefreshToken };
-	}
-
-	async function logout(refreshToken: string) {
-		const payload = tokenService.verifyRefreshToken(refreshToken);
-		await refreshTokenRepository.revokeByJti(payload.jti);
 	}
 
 	async function requestResetPassword(email: string) {

@@ -35,14 +35,18 @@ export const applicationPlugin = fp(
 			offerRepository,
 		});
 		const offerService = createOfferService({ offerRepository });
+
+		// TODO
 		const dictionaryService = createDictionaryService({ db });
+		const userService = createUserService({ db });
+
 		const tokenService = createTokenService({ jwt });
 		const verificationTokenService = createVerificationTokenService({
 			verificationTokenRepository,
 		});
 
 		const profileService = createProfileService({ profileRepository });
-		const userService = createUserService({ db });
+
 		const authService = createAuthService({
 			refreshTokenRepository,
 			profileRepository,

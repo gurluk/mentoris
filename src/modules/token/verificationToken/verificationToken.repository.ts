@@ -8,15 +8,14 @@ type VerificationTokenRepositoryDeps = {
 	db: DB;
 };
 
-export function createVerificationTokenRepository(
-	deps: VerificationTokenRepositoryDeps,
-) {
-	const { db } = deps;
+export function createVerificationTokenRepository({
+	db,
+}: VerificationTokenRepositoryDeps) {
+	const oneHourAgo = new Date(Date.now() - 1000 * 60 * 60);
 
 	async function countRecentByUserAndContext(
 		userId: number,
 		context: VerificationTokenContext,
-		since: Date,
 	) {
 		const [{ count }] = await db
 			.select({ count: sql<number>`COUNT(*)` })
@@ -25,7 +24,7 @@ export function createVerificationTokenRepository(
 				and(
 					eq(verificationTokens.user_id, userId),
 					eq(verificationTokens.context, context),
-					gt(verificationTokens.created_at, since),
+					gt(verificationTokens.created_at, oneHourAgo),
 				),
 			);
 

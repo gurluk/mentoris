@@ -19,13 +19,10 @@ export function createVerificationTokenService({
 		userId: number,
 		context: VerificationTokenContext,
 	) {
-		const oneHourAgo = new Date(Date.now() - 1000 * 60 * 60);
-
 		const tokensCreatedCount =
 			await verificationTokenRepository.countRecentByUserAndContext(
 				userId,
 				context,
-				oneHourAgo,
 			);
 
 		if (tokensCreatedCount >= MAX_TOKENS_PER_HOUR) {
