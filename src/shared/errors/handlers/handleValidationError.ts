@@ -12,6 +12,7 @@ export function handleValidationError(
 	reply: FastifyReply,
 ) {
 	if (!(error.code === "FST_ERR_VALIDATION")) return false;
+	console.log("🚀 ~ handleValidationError ~ error:", error);
 
 	const mappedFieldErrors = mapValidationErrors(
 		error.validation as ZodFastifySchemaValidationError[],

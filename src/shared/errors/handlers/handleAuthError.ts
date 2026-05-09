@@ -15,6 +15,7 @@ const authCodes = [
 
 export function handleAuthError(error: FastifyError, reply: FastifyReply) {
 	if (!authCodes.includes(error.code)) return false;
+	console.log("🚀 ~ handleAuthError ~ error:", error);
 
 	const authError = buildErrorResponse({
 		message: error.message,

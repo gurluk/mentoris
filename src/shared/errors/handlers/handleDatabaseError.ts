@@ -2,11 +2,9 @@ import { DrizzleQueryError } from "drizzle-orm/errors";
 import { FastifyError, FastifyReply } from "fastify";
 import { DatabaseError } from "pg";
 
-import { handleDatabaseError } from "~/utils/db.util";
-import {
-	buildErrorResponse,
-	errorCodeToHttpStatus,
-} from "~/utils/errorResponse.util";
+import { ApiErrorCode } from "~/enums/apiCode.enum";
+import { HttpStatus } from "~/enums/httpStatus.enum";
+import { buildErrorResponse } from "~/utils/errorResponse.util";
 
 export function handleDbError(error: FastifyError, reply: FastifyReply) {
 	if (!(error instanceof DrizzleQueryError)) return false;
@@ -14,15 +12,23 @@ export function handleDbError(error: FastifyError, reply: FastifyReply) {
 	const pgError = error.cause;
 
 	if (!(pgError instanceof DatabaseError)) return false;
+	// TODO just log the database error
+	console.log("🚀 ~ handleDbError ~ dbError:", pgError);
 
-	const dbError = handleDatabaseError(pgError);
+	// const dbError = handleDatabaseError(pgError);
 
-	const response = buildErrorResponse({
-		message: dbError.message,
-		code: dbError.code,
-	});
+	// const response = buildErrorResponse({
+	// 	message: dbError.message,
+	// 	code: dbError.code,
+	// });
 
-	reply.status(errorCodeToHttpStatus[dbError.code]).send(response);
+	// Database errors return 500
+	return reply.status(HttpStatus.INTERNAL_SERVER_ERROR).send(
+		buildErrorResponse({
+			message: "Something went wrong",
+			code: ApiErrorCode.INTERNAL_SERVER_ERROR,
+		}),
+	);
 
 	return true;
 }

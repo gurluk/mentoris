@@ -9,7 +9,6 @@ import {
 } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { unwrapResult } from "~/utils/db.util";
 import { hashUtil } from "~/utils/hash.util";
 
 import { ROLES, Role } from "../auth/auth.constants";
@@ -29,7 +28,7 @@ export function createUserService({ db }: UserServiceDeps) {
 
 			if (!roleId) throw new NotFoundError("User role assignment went wrong.");
 
-			const createdUser = await tx
+			const [createdUser] = await tx
 				.insert(users)
 				.values({
 					email,
@@ -38,7 +37,7 @@ export function createUserService({ db }: UserServiceDeps) {
 				})
 				.returning();
 
-			return unwrapResult(createdUser);
+			return createdUser;
 		});
 	}
 

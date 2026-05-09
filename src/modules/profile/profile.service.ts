@@ -3,7 +3,6 @@ import { eq } from "drizzle-orm";
 import { profiles } from "~/db/schema";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { unwrapResult } from "~/utils/db.util";
 
 import { ProfileServiceDeps } from "./profile.types";
 import { CreateProfileRequest } from "./schemas/dto/create-profile.schema";
@@ -47,7 +46,7 @@ export function createProfileService(deps: ProfileServiceDeps) {
 			);
 		}
 
-		const updatedProfile = await db
+		const [updatedProfile] = await db
 			.update(profiles)
 			.set({
 				...body,
@@ -57,7 +56,7 @@ export function createProfileService(deps: ProfileServiceDeps) {
 			.where(eq(profiles.user_id, userId))
 			.returning();
 
-		return unwrapResult(updatedProfile);
+		return updatedProfile;
 	}
 
 	async function getProfile(userId: number) {

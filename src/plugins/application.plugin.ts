@@ -3,6 +3,7 @@ import fp from "fastify-plugin";
 
 import { createAuthService } from "~/modules/auth/auth.service";
 import { createDictionaryService } from "~/modules/dictionary/dictionary.service";
+import { createOfferRepository } from "~/modules/offer/offer.repository";
 import { createOfferService } from "~/modules/offer/offer.service";
 import { createProfileService } from "~/modules/profile/profile.service";
 import { createReviewRepository } from "~/modules/review/review.repository";
@@ -19,6 +20,7 @@ export const applicationPlugin = fp(
 		const { db, jwt, emailProvider } = app;
 
 		// Repositories
+		const offerRepository = createOfferRepository({ db });
 		const reviewRepository = createReviewRepository({ db });
 		const refreshTokenRepository = createRefreshTokenRepository({ db });
 		const verificationTokenRepository = createVerificationTokenRepository({
@@ -27,7 +29,7 @@ export const applicationPlugin = fp(
 
 		// Services
 		const reviewService = createReviewService({ reviewRepository });
-		const offerService = createOfferService({ db });
+		const offerService = createOfferService({ offerRepository });
 		const dictionaryService = createDictionaryService({ db });
 		const tokenService = createTokenService({ jwt });
 		const verificationTokenService = createVerificationTokenService({

@@ -10,9 +10,7 @@ type ReviewRepositoryDeps = {
 	db: DB;
 };
 
-export function createReviewRepository(deps: ReviewRepositoryDeps) {
-	const { db } = deps;
-
+export function createReviewRepository({ db }: ReviewRepositoryDeps) {
 	async function findOfferById(offerId: number) {
 		return db.query.offers.findFirst({
 			where: eq(offers.id, offerId),
