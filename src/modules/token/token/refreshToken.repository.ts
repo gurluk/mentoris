@@ -2,7 +2,10 @@ import { eq } from "drizzle-orm";
 
 import { refreshTokens } from "~/db/schema";
 import { AppDb } from "~/types/db.types";
+import { msFromNow } from "~/utils/datetime.util";
 import { singleOrNull } from "~/utils/db.util";
+
+import { REFRESH_TOKEN_TTL_MS } from "./token.constant";
 
 type RefreshTokenRepositoryDeps = {
 	db: AppDb;
@@ -11,15 +14,11 @@ type RefreshTokenRepositoryDeps = {
 export function createRefreshTokenRepository(deps: RefreshTokenRepositoryDeps) {
 	const { db } = deps;
 
-	async function create(data: {
-		jti: string;
-		userId: number;
-		expiresAt: Date;
-	}) {
+	async function create(data: { jti: string; userId: number }) {
 		await db.insert(refreshTokens).values({
 			jti: data.jti,
 			user_id: data.userId,
-			expires_at: data.expiresAt,
+			expires_at: msFromNow(REFRESH_TOKEN_TTL_MS),
 		});
 	}
 

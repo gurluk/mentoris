@@ -9,21 +9,15 @@ type TokenServiceDeps = {
 	jwt: JWT;
 };
 
-export function createTokenService(deps: TokenServiceDeps) {
-	const { jwt } = deps;
-
-	function generateJti() {
-		return generateUuid();
-	}
-
-	function issueAccessToken(userId: number, role: Role) {
+export function createTokenService({ jwt }: TokenServiceDeps) {
+	function signAccessToken(userId: number, role: Role) {
 		return jwt.sign(
 			{ role, sub: userId.toString() },
 			{ expiresIn: env.JWT_ACCESS_TOKEN_EXPIRES_IN },
 		);
 	}
 
-	function issueRefreshToken(jti: string) {
+	function signRefreshToken(jti: string) {
 		return jwt.sign({ jti }, { expiresIn: env.JWT_REFRESH_TOKEN_EXPIRES_IN });
 	}
 
@@ -31,10 +25,14 @@ export function createTokenService(deps: TokenServiceDeps) {
 		return jwt.verify<{ jti: string }>(token);
 	}
 
+	function generateJti() {
+		return generateUuid();
+	}
+
 	return {
 		generateJti,
-		issueAccessToken,
-		issueRefreshToken,
+		signAccessToken,
+		signRefreshToken,
 		verifyRefreshToken,
 	};
 }

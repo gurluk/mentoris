@@ -10,11 +10,9 @@ type VerificationTokenServiceDeps = {
 	verificationTokenRepository: VerificationTokenRepository;
 };
 
-export function createVerificationTokenService(
-	deps: VerificationTokenServiceDeps,
-) {
-	const { verificationTokenRepository } = deps;
-
+export function createVerificationTokenService({
+	verificationTokenRepository,
+}: VerificationTokenServiceDeps) {
 	const MAX_TOKENS_PER_HOUR = 3;
 
 	async function createVerificationToken(

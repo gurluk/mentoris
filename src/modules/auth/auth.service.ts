@@ -4,7 +4,6 @@ import { InvalidCredentialsError } from "~/shared/errors/domain/InvalidCredentia
 import { BadRequestError } from "~/shared/errors/generic/BadRequestError";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { msFromNow } from "~/utils/datetime.util";
 import { hashUtil } from "~/utils/hash.util";
 
 import type { LoginRequest } from "./schemas/dto/login.schema";
@@ -13,10 +12,9 @@ import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
 import { EmailService } from "../email/email.types";
 import { ProfileService } from "../profile/profile.types";
 import { RefreshTokenRepository } from "../token/token/refreshToken.repository";
-import { REFRESH_TOKEN_TTL_MS } from "../token/token/token.constant";
 import { TokenService } from "../token/token/token.service";
 import { VerificationTokenService } from "../token/verificationToken/verificationToken.service";
-import { UserService } from "../user/user.types";
+import { UserService } from "../user/user.service";
 
 export type AuthServiceDeps = {
 	userService: UserService;
@@ -27,16 +25,14 @@ export type AuthServiceDeps = {
 	refreshTokenRepository: RefreshTokenRepository;
 };
 
-export function createAuthService(deps: AuthServiceDeps) {
-	const {
-		profileService,
-		tokenService,
-		userService,
-		verificationTokenService,
-		refreshTokenRepository,
-		emailProvider,
-	} = deps;
-
+export function createAuthService({
+	profileService,
+	tokenService,
+	userService,
+	verificationTokenService,
+	refreshTokenRepository,
+	emailProvider,
+}: AuthServiceDeps) {
 	async function register(payload: RegisterUserRequest) {
 		// TODO switch for repo method
 		const isUserExisting = await userService.checkUserExistsByEmail(
@@ -48,10 +44,7 @@ export function createAuthService(deps: AuthServiceDeps) {
 		const hashedPassword = await hashUtil.password.hash(payload.password);
 
 		// TODO switch for repo method
-		const newUser = await userService.createUser({
-			email: payload.email,
-			password: hashedPassword,
-		});
+		const newUser = await userService.createUser(payload.email, hashedPassword);
 
 		// TODO switch for repo method
 		await profileService.createProfile({ name: payload.name }, newUser.id);
@@ -85,19 +78,19 @@ export function createAuthService(deps: AuthServiceDeps) {
 		if (!user) throw new BadRequestError("Invalid verification token.");
 
 		await verificationTokenService.markTokenUsed(storedHashToken.token);
+
 		await userService.verifyUser(user.id);
 
 		const jti = tokenService.generateJti();
 		const { role } = await userService.getUserRole(user.id);
 
-		const accessToken = tokenService.issueAccessToken(user.id, role);
+		const accessToken = tokenService.signAccessToken(user.id, role);
 
-		const refreshToken = await tokenService.issueRefreshToken(jti);
+		const refreshToken = await tokenService.signRefreshToken(jti);
 
 		await refreshTokenRepository.create({
 			jti,
 			userId: user.id,
-			expiresAt: msFromNow(REFRESH_TOKEN_TTL_MS),
 		});
 
 		return { accessToken, refreshToken };
@@ -120,13 +113,12 @@ export function createAuthService(deps: AuthServiceDeps) {
 
 		const userRole = await userService.getUserRole(user.id);
 
-		const accessToken = tokenService.issueAccessToken(user.id, userRole.role);
-		const refreshToken = await tokenService.issueRefreshToken(jti);
+		const accessToken = tokenService.signAccessToken(user.id, userRole.role);
+		const refreshToken = await tokenService.signRefreshToken(jti);
 
 		await refreshTokenRepository.create({
 			jti,
 			userId: user.id,
-			expiresAt: msFromNow(REFRESH_TOKEN_TTL_MS),
 		});
 
 		return {
@@ -151,19 +143,15 @@ export function createAuthService(deps: AuthServiceDeps) {
 
 		const { role } = await userService.getUserRole(storedToken.user_id);
 
-		const accessToken = tokenService.issueAccessToken(
-			storedToken.user_id,
-			role,
-		);
+		const accessToken = tokenService.signAccessToken(storedToken.user_id, role);
 
-		const newRefreshToken = await tokenService.issueRefreshToken(newJti);
+		const newRefreshToken = await tokenService.signRefreshToken(newJti);
 
 		await refreshTokenRepository.revokeByJti(payload.jti);
 
 		await refreshTokenRepository.create({
 			jti: newJti,
 			userId: storedToken.user_id,
-			expiresAt: msFromNow(REFRESH_TOKEN_TTL_MS),
 		});
 
 		return { accessToken, refreshToken: newRefreshToken };

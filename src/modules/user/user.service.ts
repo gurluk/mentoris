@@ -8,16 +8,18 @@ import {
 	verificationTokens,
 } from "~/db/schema";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
+import { AppDb } from "~/types/db.types";
 import { unwrapResult } from "~/utils/db.util";
 import { hashUtil } from "~/utils/hash.util";
 
-import { CreateUserInput, UserServiceDeps } from "./user.types";
 import { ROLES, Role } from "../auth/auth.constants";
 
-export function createUserService(deps: UserServiceDeps) {
-	const { db } = deps;
+type UserServiceDeps = {
+	db: AppDb;
+};
 
-	async function createUser(user: CreateUserInput) {
+export function createUserService({ db }: UserServiceDeps) {
+	async function createUser(email: string, password: string) {
 		return await db.transaction(async (tx) => {
 			const role = await tx.query.userRoles.findFirst({
 				where: eq(userRoles.code, ROLES.USER),
@@ -30,8 +32,8 @@ export function createUserService(deps: UserServiceDeps) {
 			const createdUser = await tx
 				.insert(users)
 				.values({
-					email: user.email,
-					password: user.password,
+					email,
+					password,
 					role_id: roleId,
 				})
 				.returning();
@@ -72,7 +74,7 @@ export function createUserService(deps: UserServiceDeps) {
 		return user;
 	}
 
-	async function checkUserExistsByEmail(email: CreateUserInput["email"]) {
+	async function checkUserExistsByEmail(email: string) {
 		const result = await db
 			.select()
 			.from(users)
@@ -157,3 +159,5 @@ export function createUserService(deps: UserServiceDeps) {
 		getUserWithProfile,
 	};
 }
+
+export type UserService = ReturnType<typeof createUserService>;
