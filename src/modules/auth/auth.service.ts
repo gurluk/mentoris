@@ -7,11 +7,25 @@ import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
 import { msFromNow } from "~/utils/datetime.util";
 import { hashUtil } from "~/utils/hash.util";
 
-import { AuthServiceDeps } from "./auth.types";
 import type { LoginRequest } from "./schemas/dto/login.schema";
 import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
+import { EmailService } from "../email/email.types";
+import { ProfileService } from "../profile/profile.types";
+import { RefreshTokenRepository } from "../token/token/refreshToken.repository";
 import { REFRESH_TOKEN_TTL_MS } from "../token/token/token.constant";
+import { TokenService } from "../token/token/token.service";
+import { VerificationTokenService } from "../token/verificationToken/verificationToken.service";
+import { UserService } from "../user/user.types";
+
+export type AuthServiceDeps = {
+	userService: UserService;
+	verificationTokenService: VerificationTokenService;
+	tokenService: TokenService;
+	profileService: ProfileService;
+	emailProvider: EmailService;
+	refreshTokenRepository: RefreshTokenRepository;
+};
 
 export function createAuthService(deps: AuthServiceDeps) {
 	const {
@@ -249,3 +263,5 @@ export function createAuthService(deps: AuthServiceDeps) {
 		logout,
 	};
 }
+
+export type AuthService = ReturnType<typeof createAuthService>;
