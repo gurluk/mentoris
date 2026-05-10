@@ -6,6 +6,7 @@ import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
 import { hashUtil } from "~/utils/hash.util";
 
+import { Role } from "./auth.constants";
 import type { LoginRequest } from "./schemas/dto/login.schema";
 import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
@@ -14,10 +15,10 @@ import { ProfileRepository } from "../profile/profile.repository";
 import { RefreshTokenRepository } from "../token/token/refreshToken.repository";
 import { TokenService } from "../token/token/token.service";
 import { VerificationTokenService } from "../token/verificationToken/verificationToken.service";
-import { UserService } from "../user/user.service";
+import { UserRepository } from "../user/user.repository";
 
 export type AuthServiceDeps = {
-	userService: UserService;
+	userRepository: UserRepository;
 	verificationTokenService: VerificationTokenService;
 	tokenService: TokenService;
 	emailProvider: EmailService;
@@ -27,26 +28,21 @@ export type AuthServiceDeps = {
 
 export function createAuthService({
 	tokenService,
-	userService,
 	verificationTokenService,
+	userRepository,
 	profileRepository,
 	refreshTokenRepository,
 	emailProvider,
 }: AuthServiceDeps) {
 	async function register(payload: RegisterUserRequest) {
-		// TODO switch for repo method
-		const isUserExisting = await userService.checkUserExistsByEmail(
-			payload.email,
-		);
+		const isUserExisting = await userRepository.findByEmail(payload.email);
 
 		if (isUserExisting) throw new ConflictError("Email already in use");
 
 		const hashedPassword = await hashUtil.password.hash(payload.password);
 
-		// TODO switch for repo method
-		const newUser = await userService.createUser(payload.email, hashedPassword);
+		const newUser = await userRepository.create(payload.email, hashedPassword);
 
-		// TODO switch for repo method
 		await profileRepository.create({ name: payload.name }, newUser.id);
 
 		const token = await verificationTokenService.createVerificationToken(
@@ -69,7 +65,7 @@ export function createAuthService({
 	}
 
 	async function login(payload: LoginRequest) {
-		const user = await userService.getUserByEmail(payload.email);
+		const user = await userRepository.findByEmail(payload.email);
 
 		if (!user) throw new InvalidCredentialsError();
 
@@ -82,8 +78,11 @@ export function createAuthService({
 		if (!user.is_verified) throw new AccountNotVerifiedError();
 
 		const jti = tokenService.generateJti();
-		const userRole = await userService.getUserRole(user.id);
-		const accessToken = tokenService.signAccessToken(user.id, userRole.role);
+
+		const accessToken = tokenService.signAccessToken(
+			user.id,
+			user.userRole.label as Role,
+		);
 		const refreshToken = tokenService.signRefreshToken(jti);
 
 		await refreshTokenRepository.create({
@@ -105,22 +104,29 @@ export function createAuthService({
 	}
 
 	async function verifyUserAndLogin(token: string) {
-		const { user, token: storedHashToken } =
-			await userService.getUserWithValidVerificationToken(
-				token,
+		const hashedPayloadToken = hashUtil.token.hash(token);
+
+		const verificationResult =
+			await userRepository.findByValidVerificationToken(
+				hashedPayloadToken,
 				"email_verification",
 			);
 
-		if (!user) throw new BadRequestError("Invalid verification token.");
+		if (!verificationResult?.user)
+			throw new BadRequestError("Invalid verification token.");
 
-		await verificationTokenService.markTokenUsed(storedHashToken.token);
+		const { user } = verificationResult;
 
-		await userService.verifyUser(user.id);
+		await verificationTokenService.markTokenUsed(token);
+
+		await userRepository.verifyById(user.id);
 
 		const jti = tokenService.generateJti();
-		const { role } = await userService.getUserRole(user.id);
 
-		const accessToken = tokenService.signAccessToken(user.id, role);
+		const accessToken = tokenService.signAccessToken(
+			user.id,
+			verificationResult.role as Role,
+		);
 		const refreshToken = tokenService.signRefreshToken(jti);
 
 		await refreshTokenRepository.create({
@@ -143,9 +149,15 @@ export function createAuthService({
 
 		const newJti = tokenService.generateJti();
 
-		const { role } = await userService.getUserRole(storedToken.user_id);
+		const user = await userRepository.findById(storedToken.user_id);
 
-		const accessToken = tokenService.signAccessToken(storedToken.user_id, role);
+		if (!user) throw new NotFoundError("User not found");
+
+		const accessToken = tokenService.signAccessToken(
+			storedToken.user_id,
+			user.role as Role,
+		);
+
 		const newRefreshToken = tokenService.signRefreshToken(newJti);
 
 		await refreshTokenRepository.revokeByJti(payload.jti);
@@ -159,12 +171,9 @@ export function createAuthService({
 	}
 
 	async function requestResetPassword(email: string) {
-		const user = await userService.getUserByEmail(email);
+		const user = await userRepository.findByEmail(email);
 
-		if (!user.email) {
-			// TODO Logger logs error silently
-			return;
-		}
+		if (!user) throw new NotFoundError("User not found");
 
 		const token = await verificationTokenService.createVerificationToken(
 			user.id,
@@ -203,7 +212,7 @@ export function createAuthService({
 
 		const hashedNewPassword = await hashUtil.password.hash(payload.newPassword);
 
-		await userService.updateUserPassword(
+		await userRepository.updatePassword(
 			verificationToken.user_id,
 			hashedNewPassword,
 		);
@@ -212,7 +221,7 @@ export function createAuthService({
 	}
 
 	async function resendVerificationLink(email: string) {
-		const user = await userService.getUserByEmail(email);
+		const user = await userRepository.findByEmail(email);
 
 		if (!user) throw new NotFoundError("User not found");
 

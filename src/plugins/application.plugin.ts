@@ -13,6 +13,7 @@ import { createRefreshTokenRepository } from "~/modules/token/token/refreshToken
 import { createTokenService } from "~/modules/token/token/token.service";
 import { createVerificationTokenRepository } from "~/modules/token/verificationToken/verificationToken.repository";
 import { createVerificationTokenService } from "~/modules/token/verificationToken/verificationToken.service";
+import { createUserRepository } from "~/modules/user/user.repository";
 import { createUserService } from "~/modules/user/user.service";
 
 export const applicationPlugin = fp(
@@ -25,6 +26,7 @@ export const applicationPlugin = fp(
 		const profileRepository = createProfileRepository({ db });
 		const reviewRepository = createReviewRepository({ db });
 		const refreshTokenRepository = createRefreshTokenRepository({ db });
+		const userRepository = createUserRepository({ db });
 		const verificationTokenRepository = createVerificationTokenRepository({
 			db,
 		});
@@ -38,7 +40,7 @@ export const applicationPlugin = fp(
 
 		// TODO
 		const dictionaryService = createDictionaryService({ db });
-		const userService = createUserService({ db });
+		const userService = createUserService({ userRepository });
 
 		const tokenService = createTokenService({ jwt });
 		const verificationTokenService = createVerificationTokenService({
@@ -52,7 +54,7 @@ export const applicationPlugin = fp(
 			profileRepository,
 			emailProvider,
 			tokenService,
-			userService,
+			userRepository,
 			verificationTokenService,
 		});
 

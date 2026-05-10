@@ -1,161 +1,28 @@
-import { and, eq, gt } from "drizzle-orm";
-
-import {
-	profiles,
-	userRoles,
-	users,
-	type VerificationTokenContext,
-	verificationTokens,
-} from "~/db/schema";
-import { DB } from "~/plugins/db.plugin";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { hashUtil } from "~/utils/hash.util";
 
-import { ROLES, Role } from "../auth/auth.constants";
+import type { UserRepository } from "./user.repository";
 
 type UserServiceDeps = {
-	db: DB;
+	userRepository: UserRepository;
 };
 
-export function createUserService({ db }: UserServiceDeps) {
-	async function createUser(email: string, password: string) {
-		return await db.transaction(async (tx) => {
-			const role = await tx.query.userRoles.findFirst({
-				where: eq(userRoles.code, ROLES.USER),
-			});
-
-			const roleId = role?.id;
-
-			if (!roleId) throw new NotFoundError("User role assignment went wrong.");
-
-			const [createdUser] = await tx
-				.insert(users)
-				.values({
-					email,
-					password,
-					role_id: roleId,
-				})
-				.returning();
-
-			return createdUser;
-		});
-	}
-
-	async function getUserByEmail(email: string) {
-		const [user] = await db
-			.select()
-			.from(users)
-			.where(eq(users.email, email))
-			.limit(1);
-
-		if (!user) throw new NotFoundError("User not found");
-
-		return user;
-	}
-
-	async function getUserWithProfile(userId: number) {
-		const [user] = await db
-			.select({
-				id: users.id,
-				email: users.email,
-				isVerified: users.is_verified,
-				// profile fields
-				name: profiles.name,
-				profilePictureUrl: profiles.profile_picture_url,
-			})
-			.from(users)
-			.innerJoin(profiles, eq(profiles.user_id, users.id))
-			.where(eq(users.id, userId))
-			.limit(1);
+export function createUserService({ userRepository }: UserServiceDeps) {
+	async function getCurrentUser(userId: number) {
+		const user = await userRepository.findById(userId);
 
 		if (!user) throw new NotFoundError("User not found.");
 
-		return user;
-	}
-
-	async function checkUserExistsByEmail(email: string) {
-		const result = await db
-			.select()
-			.from(users)
-			.where(eq(users.email, email))
-			.limit(1);
-		return result.length > 0;
-	}
-
-	async function getUserRole(userId: number) {
-		const userRole = await db.query.users.findFirst({
-			where: eq(users.id, userId),
-			columns: {},
-			with: {
-				userRole: {
-					columns: { label: true },
-				},
-			},
-		});
-
-		if (!userRole) {
-			throw new NotFoundError("User role not found");
-		}
-
-		const role = userRole.userRole.label as Role;
-
 		return {
-			role,
+			id: user.id,
+			email: user.email,
+			name: user.name,
+			profilePictureUrl: user.profilePictureUrl,
+			isVerified: user.isVerified,
 		};
 	}
 
-	async function verifyUser(userId: number) {
-		await db
-			.update(users)
-			.set({ is_verified: true, updated_at: new Date() })
-			.where(eq(users.id, userId));
-	}
-
-	async function getUserWithValidVerificationToken(
-		token: string,
-		context: VerificationTokenContext,
-	) {
-		const hashedPayloadToken = hashUtil.token.hash(token);
-
-		const [result] = await db
-			.select({
-				user: users,
-				token: verificationTokens,
-			})
-			.from(verificationTokens)
-			.innerJoin(users, eq(verificationTokens.user_id, users.id))
-			.where(
-				and(
-					eq(verificationTokens.token, hashedPayloadToken),
-					eq(verificationTokens.context, context),
-					eq(verificationTokens.used, false),
-					gt(verificationTokens.expires_at, new Date()),
-				),
-			)
-			.limit(1);
-
-		if (!result)
-			throw new NotFoundError("Verification request token or user not found");
-
-		return result;
-	}
-
-	async function updateUserPassword(userId: number, hashedPassword: string) {
-		await db
-			.update(users)
-			.set({ password: hashedPassword, updated_at: new Date() })
-			.where(eq(users.id, userId));
-	}
-
 	return {
-		updateUserPassword,
-		getUserWithValidVerificationToken,
-		getUserRole,
-		verifyUser,
-		createUser,
-		getUserByEmail,
-		checkUserExistsByEmail,
-		getUserWithProfile,
+		getCurrentUser,
 	};
 }
 

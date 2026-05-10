@@ -14,9 +14,7 @@ export const userRoutes: FastifyPluginAsync = async (app: App) => {
 		onRequest: authorizeUser,
 		schema: getCurrentUserRouteSchema,
 		handler: async function getCurrentUser(request, reply) {
-			const userProfile = await app.userService.getUserWithProfile(
-				request.userId,
-			);
+			const userProfile = await app.userService.getCurrentUser(request.userId);
 			reply.ok({ data: userProfile });
 		},
 	});
