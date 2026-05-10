@@ -2,9 +2,9 @@ import { DrizzleQueryError } from "drizzle-orm/errors";
 import { FastifyError, FastifyReply } from "fastify";
 import { DatabaseError } from "pg";
 
-import { ApiErrorCode } from "~/enums/apiCode.enum";
-import { HttpStatus } from "~/enums/httpStatus.enum";
-import { buildErrorResponse } from "~/utils/errorResponse.util";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
+import { buildErrorResponse } from "~/shared/utils/errorResponse.util";
 
 export function handleDbError(error: FastifyError, reply: FastifyReply) {
 	if (!(error instanceof DrizzleQueryError)) return false;

@@ -2,7 +2,7 @@ import { and, desc, eq } from "drizzle-orm";
 
 import { offerReviews } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
-import { singleOrNull } from "~/utils/db.util";
+import { singleOrNull } from "~/shared/utils/db.util";
 
 import { CreateReviewRequest } from "./schemas/dto/create-review.schema";
 

@@ -1,9 +1,9 @@
 import { FastifyError, FastifyReply } from "fastify";
 import { ZodFastifySchemaValidationError } from "fastify-type-provider-zod";
 
-import { ApiErrorCode } from "~/enums/apiCode.enum";
-import { HttpStatus } from "~/enums/httpStatus.enum";
-import { buildErrorResponse } from "~/utils/errorResponse.util";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
+import { buildErrorResponse } from "~/shared/utils/errorResponse.util";
 
 import { mapValidationErrors } from "./mapValidationError";
 

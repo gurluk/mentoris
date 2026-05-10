@@ -1,8 +1,8 @@
 import { FastifyReply } from "fastify";
 
-import { ApiErrorCode } from "~/enums/apiCode.enum";
-import { HttpStatus } from "~/enums/httpStatus.enum";
-import { buildErrorResponse } from "~/utils/errorResponse.util";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
+import { buildErrorResponse } from "~/shared/utils/errorResponse.util";
 
 export function handleUnknownError(error: unknown, reply: FastifyReply) {
 	console.log("🚀 ~ handleUnknownError ~ error:", error);

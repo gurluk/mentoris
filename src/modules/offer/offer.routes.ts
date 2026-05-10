@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 
 import { App } from "~/app";
-import { createAuthGuards } from "~/utils/createAuthGuards.util";
+import { createAuthGuards } from "~/shared/utils/createAuthGuards.util";
 
 import {
 	createOfferRouteSchema,

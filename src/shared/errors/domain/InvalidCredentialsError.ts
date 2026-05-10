@@ -1,4 +1,4 @@
-import { ApiErrorCode } from "~/enums/apiCode.enum";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
 
 import { AppError } from "../base/AppError";
 

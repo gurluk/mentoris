@@ -7,7 +7,7 @@ import {
 	verificationTokens,
 } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
-import { singleOrNull } from "~/utils/db.util";
+import { singleOrNull } from "~/shared/utils/db.util";
 
 import { ROLES } from "../auth/auth.constants";
 

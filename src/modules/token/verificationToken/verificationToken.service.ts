@@ -1,8 +1,8 @@
 import { type VerificationTokenContext } from "~/db/schema";
 import { TooManyRequestsError } from "~/shared/errors/domain/TooManyRequestsError";
-import { minutesFromNow } from "~/utils/datetime.util";
-import { hashUtil } from "~/utils/hash.util";
-import { generateUuid } from "~/utils/uuid.util";
+import { minutesFromNow } from "~/shared/utils/datetime.util";
+import { hashUtil } from "~/shared/utils/hash.util";
+import { generateUuid } from "~/shared/utils/uuid.util";
 
 import { VerificationTokenRepository } from "./verificationToken.repository";
 

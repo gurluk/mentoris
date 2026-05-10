@@ -1,7 +1,7 @@
-import { SwaggerTags } from "~/constants/swaggerTags";
-import { HttpStatus } from "~/enums/httpStatus.enum";
+import { SwaggerTags } from "~/shared/constants/swaggerTags";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
 import { ApiResponseSchema } from "~/shared/schemas/responseSuccess.schema";
-import { createRouteSchema } from "~/utils/createRouteSchema.util";
+import { createRouteSchema } from "~/shared/utils/createRouteSchema.util";
 
 import { UserDtoSchema } from "../dto/user.dto";
 

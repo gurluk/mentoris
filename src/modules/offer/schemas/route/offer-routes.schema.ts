@@ -1,8 +1,8 @@
-import { SwaggerTags } from "~/constants/swaggerTags";
-import { HttpStatus } from "~/enums/httpStatus.enum";
 import { offerIdParamsSchema } from "~/modules/offer/schemas/params/offer.params.schema";
+import { SwaggerTags } from "~/shared/constants/swaggerTags";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
 import { ApiResponseSchema } from "~/shared/schemas/responseSuccess.schema";
-import { createRouteSchema } from "~/utils/createRouteSchema.util";
+import { createRouteSchema } from "~/shared/utils/createRouteSchema.util";
 
 import { CreateOfferRequestSchema } from "../dto/create-offer.schema";
 import { OfferDtoSchema } from "../dto/offer.dto";

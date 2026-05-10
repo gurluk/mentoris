@@ -1,7 +1,7 @@
 import { DatabaseError } from "pg";
 
-import { ApiErrorCode } from "~/enums/apiCode.enum";
-import { PostgresErrorCode } from "~/enums/postgresErrorCode.enum";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
+import { PostgresErrorCode } from "~/shared/enums/postgresErrorCode.enum";
 
 export function handleDatabaseError(error: DatabaseError): {
 	message: string;

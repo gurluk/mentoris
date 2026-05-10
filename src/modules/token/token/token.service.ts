@@ -1,7 +1,7 @@
 import { JWT } from "@fastify/jwt";
 
 import { env } from "~/env";
-import { generateUuid } from "~/utils/uuid.util";
+import { generateUuid } from "~/shared/utils/uuid.util";
 
 import { Role } from "../../auth/auth.constants";
 

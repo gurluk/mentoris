@@ -1,10 +1,10 @@
 import { FastifyError, FastifyReply } from "fastify";
 
-import { ApiErrorCode } from "~/enums/apiCode.enum";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
 import {
 	buildErrorResponse,
 	errorCodeToHttpStatus,
-} from "~/utils/errorResponse.util";
+} from "~/shared/utils/errorResponse.util";
 
 const authCodes = [
 	"FST_JWT_NO_AUTHORIZATION_IN_HEADER",

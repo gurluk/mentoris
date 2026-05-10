@@ -2,9 +2,8 @@ import { eq } from "drizzle-orm";
 
 import { profiles } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
-import { singleOrNull } from "~/utils/db.util";
+import { singleOrNull } from "~/shared/utils/db.util";
 
-import { CreateProfileRequest } from "./schemas/dto/create-profile.schema";
 import { UpdateProfileRequest } from "./schemas/dto/update-profile.schema";
 
 type ProfileRepositoryDeps = {
@@ -12,15 +11,13 @@ type ProfileRepositoryDeps = {
 };
 
 export function createProfileRepository({ db }: ProfileRepositoryDeps) {
-	async function create(data: CreateProfileRequest, userId: number) {
+	// Basically used only on registration to insert row with user name
+	async function create(name: string, userId: number) {
 		const [createdProfile] = await db
 			.insert(profiles)
 			.values({
 				user_id: userId,
-				name: data.name,
-				bio: data.bio,
-				// TODO dob? how we handle dates in our app with UTC?
-				dob: undefined,
+				name,
 			})
 			.returning();
 
@@ -34,7 +31,7 @@ export function createProfileRepository({ db }: ProfileRepositoryDeps) {
 				name: data.name,
 				bio: data.bio,
 				profile_picture_url: data.profilePicture,
-				dob: data.dob?.toISOString(),
+				dob: data.dob,
 			})
 			.where(eq(profiles.user_id, userId))
 			.returning();

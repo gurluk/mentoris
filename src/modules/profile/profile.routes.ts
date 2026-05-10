@@ -1,31 +1,16 @@
 import { FastifyPluginAsync } from "fastify";
 
 import { App } from "~/app";
-import { createAuthGuards } from "~/utils/createAuthGuards.util";
+import { createAuthGuards } from "~/shared/utils/createAuthGuards.util";
 
 import { ProfileDtoSchema } from "./schemas/dto/profile.dto";
 import {
-	// createProfileRouteSchema,
 	getProfileRouteSchema,
 	updateProfileRouteSchema,
 } from "./schemas/route/profile-routes.schema";
 
 export const profileRoutes: FastifyPluginAsync = async (app: App) => {
 	const { authorizeUser } = createAuthGuards(app);
-
-	// Profile is created upon registration with name, only update after!
-
-	// app.route({
-	// 	method: "POST",
-	// 	url: "",
-	// 	schema: createProfileRouteSchema,
-	// 	onRequest: authorizeUser,
-	// 	handler: async function createProfile(request, reply) {
-	// 		const createdProfile = await app.profileService.createProfile(request.body, request.userId);
-	// 		const data = ProfileDtoSchema.parse(createdProfile);
-	// 		reply.created({ data });
-	// 	},
-	// });
 
 	app.route({
 		method: "PUT",

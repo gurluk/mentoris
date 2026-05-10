@@ -4,7 +4,7 @@ import { InvalidCredentialsError } from "~/shared/errors/domain/InvalidCredentia
 import { BadRequestError } from "~/shared/errors/generic/BadRequestError";
 import { ConflictError } from "~/shared/errors/generic/ConflictError";
 import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
-import { hashUtil } from "~/utils/hash.util";
+import { hashUtil } from "~/shared/utils/hash.util";
 
 import { Role } from "./auth.constants";
 import type { LoginRequest } from "./schemas/dto/login.schema";
@@ -43,7 +43,7 @@ export function createAuthService({
 
 		const newUser = await userRepository.create(payload.email, hashedPassword);
 
-		await profileRepository.create({ name: payload.name }, newUser.id);
+		await profileRepository.create(payload.name, newUser.id);
 
 		const token = await verificationTokenService.createVerificationToken(
 			newUser.id,

@@ -1,5 +1,5 @@
-import { ApiErrorCode } from "~/enums/apiCode.enum";
-import { HttpStatus } from "~/enums/httpStatus.enum";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
 import { ErrorResponse } from "~/shared/schemas/responseError.schema";
 
 export function buildErrorResponse(

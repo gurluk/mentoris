@@ -2,8 +2,8 @@ import { eq } from "drizzle-orm";
 
 import { refreshTokens } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
-import { msFromNow } from "~/utils/datetime.util";
-import { singleOrNull } from "~/utils/db.util";
+import { msFromNow } from "~/shared/utils/datetime.util";
+import { singleOrNull } from "~/shared/utils/db.util";
 
 import { REFRESH_TOKEN_TTL_MS } from "./token.constant";
 

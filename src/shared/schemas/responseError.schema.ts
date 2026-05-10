@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ApiErrorCode } from "~/enums/apiCode.enum";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
 
 export const FieldErrorsSchema = z
 	.record(z.string(), z.array(z.string()))

@@ -5,7 +5,7 @@ import fp from "fastify-plugin";
 
 import { env } from "~/env";
 import { UnauthorizedError } from "~/shared/errors/generic/UnauthorizedError";
-import { generateUuid } from "~/utils/uuid.util";
+import { generateUuid } from "~/shared/utils/uuid.util";
 
 import { extname } from "node:path";
 

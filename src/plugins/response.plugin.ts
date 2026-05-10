@@ -1,7 +1,7 @@
 import { FastifyPluginAsync, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
 
-import { HttpStatus } from "~/enums/httpStatus.enum";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
 
 const responseHandler: FastifyPluginAsync = async (app) => {
 	app.decorateReply(

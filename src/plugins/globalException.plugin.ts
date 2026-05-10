@@ -1,14 +1,14 @@
 import { FastifyError, FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";
 
-import { ApiErrorCode } from "~/enums/apiCode.enum";
-import { HttpStatus } from "~/enums/httpStatus.enum";
+import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
+import { HttpStatus } from "~/shared/enums/httpStatus.enum";
 import { handleAppError } from "~/shared/errors/handlers/handleAppError";
 import { handleAuthError } from "~/shared/errors/handlers/handleAuthError";
 import { handleDbError } from "~/shared/errors/handlers/handleDatabaseError";
 import { handleUnknownError } from "~/shared/errors/handlers/handleUnknownError";
 import { handleValidationError } from "~/shared/errors/handlers/handleValidationError";
-import { buildErrorResponse } from "~/utils/errorResponse.util";
+import { buildErrorResponse } from "~/shared/utils/errorResponse.util";
 
 const globalExceptionHandler: FastifyPluginAsync = async (app) => {
 	app.setErrorHandler((error: FastifyError, _req, reply) => {
