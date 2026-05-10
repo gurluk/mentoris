@@ -28,6 +28,7 @@ export const loginRouteSchema = createRouteSchema({
 		),
 	},
 });
+
 export const logoutRouteSchema = createRouteSchema({
 	tags: [TAG],
 	summary: "Logout user",

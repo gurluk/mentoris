@@ -1,16 +1,15 @@
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
-import { createEmailService } from "./email.service";
-
 interface TemplateVariables {
 	resetPasswordTemplate: {
-		link: string;
-		email: string;
+		token: string;
 	};
 	verifyAccountTemplate: {
-		link: string;
+		token: string;
 	};
 }
+
+export type EmailTemplateName = keyof TemplateVariables;
 
 export type EmailTemplateParams = {
 	[K in keyof TemplateVariables]: {
@@ -19,13 +18,9 @@ export type EmailTemplateParams = {
 	};
 }[keyof TemplateVariables];
 
-export type SendEmailParams = {
-	to: string;
-	template: EmailTemplateParams;
-};
-
-export interface EmailPlugin {
-	send: (options: SendEmailParams) => Promise<SMTPTransport.SentMessageInfo>;
+export interface EmailProvider {
+	send: (
+		userId: number,
+		template: EmailTemplateParams,
+	) => Promise<SMTPTransport.SentMessageInfo>;
 }
-
-export type EmailService = ReturnType<typeof createEmailService>;

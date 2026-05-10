@@ -32,9 +32,6 @@ export async function buildApp() {
 	// DB client
 	app.register(dbClientPlugin);
 
-	// App bootstrap modules, services, repositories
-	app.register(applicationPlugin);
-
 	// Email service bootstrap
 	app.register(emailPlugin);
 
@@ -56,6 +53,9 @@ export async function buildApp() {
 
 	// Swagger register to generate swagger shema from routes
 	app.register(swaggerPlugin);
+
+	// App bootstrap modules, services, repositories
+	app.register(applicationPlugin);
 
 	// Routes bootstrap
 	app.register(registerAppRoutes, { prefix: "/api" });

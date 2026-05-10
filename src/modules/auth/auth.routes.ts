@@ -26,7 +26,7 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 		schema: registerRouteSchema,
 		handler: async function registerUser(request, reply) {
 			const { email } = await app.authService.register(request.body);
-			reply.ok({ data: email });
+			reply.created({ data: { email } });
 		},
 	});
 
@@ -127,7 +127,7 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 			const body = request.body;
 			await app.authService.requestResetPassword(body.email);
 
-			reply.ok({ data: body.email });
+			reply.ok({ data: { email: body.email } });
 		},
 	});
 
@@ -149,7 +149,7 @@ export const authRoutes: FastifyPluginAsync = async (app: App) => {
 			const body = request.body as ResendVerificationLinkRequest;
 			await app.authService.resendVerificationLink(body.email);
 
-			reply.ok({ data: body.email });
+			reply.ok({ data: { email: body.email } });
 		},
 	});
 };

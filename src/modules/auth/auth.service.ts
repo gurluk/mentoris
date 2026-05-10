@@ -10,7 +10,7 @@ import { Role } from "./auth.constants";
 import type { LoginRequest } from "./schemas/dto/login.schema";
 import { RegisterUserRequest } from "./schemas/dto/register-user.schema";
 import type { ResetPasswordRequest } from "./schemas/dto/reset-password.schema";
-import { EmailService } from "../email/email.types";
+import { EmailProvider } from "../email/email.types";
 import { ProfileRepository } from "../profile/profile.repository";
 import { RefreshTokenRepository } from "../token/token/refreshToken.repository";
 import { TokenService } from "../token/token/token.service";
@@ -21,7 +21,7 @@ export type AuthServiceDeps = {
 	userRepository: UserRepository;
 	verificationTokenService: VerificationTokenService;
 	tokenService: TokenService;
-	emailProvider: EmailService;
+	emailProvider: EmailProvider;
 	profileRepository: ProfileRepository;
 	refreshTokenRepository: RefreshTokenRepository;
 };
@@ -50,14 +50,10 @@ export function createAuthService({
 			"email_verification",
 		);
 
-		emailProvider.send({
-			to: newUser.email,
-			// TODO environment domain/host, just needs to pass the token
-			template: {
-				name: "verifyAccountTemplate",
-				variables: {
-					link: `http://localhost:4321/verify?token=${token}`,
-				},
+		emailProvider.send(newUser.id, {
+			name: "verifyAccountTemplate",
+			variables: {
+				token,
 			},
 		});
 
@@ -181,16 +177,10 @@ export function createAuthService({
 			"password_reset",
 		);
 
-		emailProvider.send({
-			to: user.email,
-			template: {
-				name: "resetPasswordTemplate",
-				variables: {
-					email: user.email,
-					// TODO environment dynamic domain/host, just needs to pass the token
-					// TODO Frontend route should be included here and call this endpoint en route to verify, for now use direct endpoint
-					link: `http://localhost:3000/api/auth/reset-password?token=${token}`,
-				},
+		emailProvider.send(user.id, {
+			name: "resetPasswordTemplate",
+			variables: {
+				token,
 			},
 		});
 	}
@@ -233,15 +223,10 @@ export function createAuthService({
 			"email_verification",
 		);
 
-		emailProvider.send({
-			to: user.email,
-			template: {
-				name: "verifyAccountTemplate",
-				variables: {
-					// TODO environment dynamic domain/host, just needs to pass the token
-					// TODO Frontend route should be included here and call this endpoint en route to verify, for now use direct endpoint
-					link: `http://localhost:3000/api/auth/verify-account?token=${token}`,
-				},
+		emailProvider.send(user.id, {
+			name: "verifyAccountTemplate",
+			variables: {
+				token,
 			},
 		});
 	}

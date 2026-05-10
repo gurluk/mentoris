@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "tsx --watch --env-file .env.dev ./src/app.ts",
-		"build": "tsc && tsc-alias -p tsconfig.json && yarn build:emails",
+		"build": "yarn build:emails && tsc && tsc-alias -p tsconfig.json && cp -R src/modules/email/templates dist/modules/email/templates",
 		"start": "node dist/app.js",
 		"build:emails": "tsx ./src/scripts/build-email-templates.ts",
 		"typecheck": "tsc --noEmit",

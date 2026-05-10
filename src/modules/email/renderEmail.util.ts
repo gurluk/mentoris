@@ -3,27 +3,42 @@ import Handlebars from "handlebars";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { EmailTemplateParams } from "~/modules/email/email.types";
+import type { EmailTemplateName } from "~/modules/email/email.types";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Renders prebuilt mjml to hbs files
-export function renderEmail(template: EmailTemplateParams) {
-	const templatesDir = path.join(__dirname, "templates");
-	const templatePath = path.join(templatesDir, `${template.name}.hbs`);
+type RenderVariables = Record<string, unknown>;
 
-	if (!fs.existsSync(templatePath)) {
-		throw new Error(`Email template not found: ${templatePath}`);
+export function createEmailRenderer() {
+	const templatesDir = path.join(__dirname, "templates");
+	const templates = new Map<
+		EmailTemplateName,
+		Handlebars.TemplateDelegate<RenderVariables>
+	>();
+
+	for (const file of fs.readdirSync(templatesDir)) {
+		if (!file.endsWith(".hbs")) continue;
+
+		const name = file.replace(".hbs", "") as EmailTemplateName;
+		const templatePath = path.join(templatesDir, file);
+		const templateSource = fs.readFileSync(templatePath, "utf8");
+
+		templates.set(name, Handlebars.compile(templateSource));
 	}
 
-	const templateSource = fs.readFileSync(templatePath, "utf8");
+	return {
+		render: (name: EmailTemplateName, variables: RenderVariables) => {
+			const template = templates.get(name);
 
-	const compiled = Handlebars.compile(templateSource);
-	const html = compiled({
-		...template.variables,
-		year: new Date().getFullYear(),
-	});
+			if (!template) throw new Error(`Email template not loaded: ${name}`);
 
-	return html;
+			return template({
+				...variables,
+				year: new Date().getFullYear(),
+			});
+		},
+	};
 }
+
+export type EmailRenderer = ReturnType<typeof createEmailRenderer>;

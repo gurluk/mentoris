@@ -64,6 +64,6 @@ export const applicationPlugin = fp(
 	},
 	{
 		name: "application-plugin",
-		dependencies: ["db-client-plugin"],
+		dependencies: ["db-client-plugin", "email-plugin"],
 	},
 );

@@ -2,7 +2,7 @@ import "@fastify/jwt";
 import "fastify";
 
 import { AuthService } from "./modules/auth/auth.service";
-import { EmailService } from "./modules/email/email.types";
+import { EmailProvider } from "./modules/email/email.types";
 import { OfferService } from "./modules/offer/offer.service";
 import { ProfileService } from "./modules/profile/profile.service";
 import { ReviewService } from "./modules/review/review.service";
@@ -17,7 +17,7 @@ declare module "fastify" {
 		db: DB;
 
 		// Services
-		emailProvider: EmailService;
+		emailProvider: EmailProvider;
 		authService: AuthService;
 		offerService: OfferService;
 		reviewService: ReviewService;

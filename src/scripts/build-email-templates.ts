@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const srcDir = path.join(__dirname, "..", "modules", "email", "mjml");
-const outDir = path.join(__dirname, "../..", "dist", "templates");
+const outDir = path.join(__dirname, "..", "modules", "email", "templates");
 
 // Ensure output directory exists
 if (!fs.existsSync(outDir)) {
@@ -23,7 +23,9 @@ for (const file of fs.readdirSync(srcDir)) {
 		const { html, errors } = mjml2html(mjmlContent, { filePath });
 
 		if (errors.length) {
-			console.warn(`⚠️ MJML errors in ${file}:`, errors);
+			process.stderr.write(
+				`MJML errors in ${file}: ${JSON.stringify(errors, null, 2)}\n`,
+			);
 		}
 
 		const outFile = file.replace(".mjml", ".hbs");
@@ -31,4 +33,4 @@ for (const file of fs.readdirSync(srcDir)) {
 	}
 }
 
-console.log(`✅ Email templates built into: ${outDir}`);
+process.stdout.write(`Email templates built into: ${outDir}\n`);
