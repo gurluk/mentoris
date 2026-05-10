@@ -81,8 +81,9 @@ export function createAuthService({
 
 		const accessToken = tokenService.signAccessToken(
 			user.id,
-			user.userRole.label as Role,
+			user.role as Role,
 		);
+
 		const refreshToken = tokenService.signRefreshToken(jti);
 
 		await refreshTokenRepository.create({

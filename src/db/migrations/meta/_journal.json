@@ -15,6 +15,13 @@
       "when": 1777323307412,
       "tag": "0001_rename_category_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778408617092,
+      "tag": "0002_remove_user_roles",
+      "breakpoints": true
     }
   ]
 }

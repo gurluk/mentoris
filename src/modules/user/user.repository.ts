@@ -2,13 +2,11 @@ import { and, eq, gt } from "drizzle-orm";
 
 import {
 	profiles,
-	userRoles,
 	users,
 	type VerificationTokenContext,
 	verificationTokens,
 } from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
-import { NotFoundError } from "~/shared/errors/generic/NotFoundError";
 import { singleOrNull } from "~/utils/db.util";
 
 import { ROLES } from "../auth/auth.constants";
@@ -19,36 +17,21 @@ type UserRepositoryDeps = {
 
 export function createUserRepository({ db }: UserRepositoryDeps) {
 	async function create(email: string, password: string) {
-		return db.transaction(async (tx) => {
-			const role = await tx.query.userRoles.findFirst({
-				where: eq(userRoles.code, ROLES.USER),
-			});
+		const [createdUser] = await db
+			.insert(users)
+			.values({
+				email,
+				password,
+				role: ROLES.USER,
+			})
+			.returning();
 
-			const roleId = role?.id;
-
-			if (!roleId) throw new NotFoundError("User role assignment went wrong.");
-
-			const [createdUser] = await tx
-				.insert(users)
-				.values({
-					email,
-					password,
-					role_id: roleId,
-				})
-				.returning();
-
-			return createdUser;
-		});
+		return createdUser;
 	}
 
 	async function findByEmail(email: string) {
 		return db.query.users.findFirst({
 			where: eq(users.email, email),
-			with: {
-				userRole: {
-					columns: { label: true },
-				},
-			},
 		});
 	}
 
@@ -58,14 +41,13 @@ export function createUserRepository({ db }: UserRepositoryDeps) {
 				id: users.id,
 				email: users.email,
 				isVerified: users.is_verified,
-				role: userRoles.label,
+				role: users.role,
 				// profile fields
 				name: profiles.name,
 				profilePictureUrl: profiles.profile_picture_url,
 			})
 			.from(users)
 			.innerJoin(profiles, eq(profiles.user_id, users.id))
-			.innerJoin(userRoles, eq(users.role_id, userRoles.id))
 			.where(eq(users.id, userId))
 			.limit(1);
 
@@ -87,11 +69,10 @@ export function createUserRepository({ db }: UserRepositoryDeps) {
 			.select({
 				user: users,
 				token: verificationTokens,
-				role: userRoles.label,
+				role: users.role,
 			})
 			.from(verificationTokens)
 			.innerJoin(users, eq(verificationTokens.user_id, users.id))
-			.innerJoin(userRoles, eq(users.role_id, userRoles.id))
 			.where(
 				and(
 					eq(verificationTokens.token, tokenHash),
