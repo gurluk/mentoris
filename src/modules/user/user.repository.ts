@@ -16,12 +16,12 @@ type UserRepositoryDeps = {
 };
 
 export function createUserRepository({ db }: UserRepositoryDeps) {
-	async function create(email: string, password: string) {
+	async function create(email: string, hashedPassword: string) {
 		const [createdUser] = await db
 			.insert(users)
 			.values({
 				email,
-				password,
+				password: hashedPassword,
 				role: ROLES.USER,
 			})
 			.returning();
@@ -42,6 +42,7 @@ export function createUserRepository({ db }: UserRepositoryDeps) {
 				email: users.email,
 				isVerified: users.is_verified,
 				role: users.role,
+
 				// profile fields
 				name: profiles.name,
 				profilePictureUrl: profiles.profile_picture_url,

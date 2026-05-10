@@ -1,6 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 
 import { App } from "~/app";
+import { cities, offerCategories } from "~/db/schema";
 
 import {
 	getCategoriesRouteSchema,
@@ -13,8 +14,8 @@ export const dictionaryRoutes: FastifyPluginAsync = async (app: App) => {
 		url: "/cities",
 		schema: getCitiesRouteSchema,
 		handler: async function getCities(_request, reply) {
-			const cities = await app.dictionaryService.getCitiesDictionary();
-			reply.ok({ data: cities });
+			const data = await app.db.select().from(cities);
+			reply.ok({ data: data });
 		},
 	});
 
@@ -23,8 +24,8 @@ export const dictionaryRoutes: FastifyPluginAsync = async (app: App) => {
 		url: "/categories",
 		schema: getCategoriesRouteSchema,
 		handler: async function getCategories(_request, reply) {
-			const categories = await app.dictionaryService.getCategoriesDictionary();
-			reply.ok({ data: categories });
+			const data = await app.db.select().from(offerCategories);
+			reply.ok({ data: data });
 		},
 	});
 };

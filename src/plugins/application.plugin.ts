@@ -2,7 +2,6 @@ import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 
 import { createAuthService } from "~/modules/auth/auth.service";
-import { createDictionaryService } from "~/modules/dictionary/dictionary.service";
 import { createOfferRepository } from "~/modules/offer/offer.repository";
 import { createOfferService } from "~/modules/offer/offer.service";
 import { createProfileRepository } from "~/modules/profile/profile.repository";
@@ -37,9 +36,6 @@ export const applicationPlugin = fp(
 			offerRepository,
 		});
 		const offerService = createOfferService({ offerRepository });
-
-		// TODO
-		const dictionaryService = createDictionaryService({ db });
 		const userService = createUserService({ userRepository });
 
 		const tokenService = createTokenService({ jwt });
@@ -61,7 +57,6 @@ export const applicationPlugin = fp(
 		app.decorate("authService", authService);
 		app.decorate("offerService", offerService);
 		app.decorate("reviewService", reviewService);
-		app.decorate("dictionaryService", dictionaryService);
 		app.decorate("tokenService", tokenService);
 		app.decorate("verificationTokenService", verificationTokenService);
 		app.decorate("profileService", profileService);
