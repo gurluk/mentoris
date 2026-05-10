@@ -1,9 +1,11 @@
 import z from "zod";
 
+import { DateStringSchema } from "~/shared/schemas/datetime.schema";
+
 export const ProfileDtoSchema = z.object({
 	name: z.string().min(2),
 	bio: z.string().nullable(),
-	dob: z.iso.date().nullable(),
+	dob: DateStringSchema.nullable(),
 	profilePictureUrl: z.url().nullable(),
 });
 
