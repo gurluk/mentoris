@@ -1,8 +1,14 @@
 import { eq } from "drizzle-orm";
 
-import { offers, offersOfferLevels } from "~/db/schema";
+import {
+	offers,
+	offersOfferCategories,
+	offersOfferFormats,
+	offersOfferLevels,
+} from "~/db/schema";
 import { DB } from "~/plugins/db.plugin";
 
+import { createOfferRelationValues } from "./helpers/createOfferRelationValues";
 import { CreateOfferRequest } from "./schemas/dto/create-offer.schema";
 import { UpdateOfferRequest } from "./schemas/dto/update-offer.schema";
 
@@ -24,24 +30,35 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 				})
 				.returning();
 
-			// TODO fix
-			// if (categoryIdList.length) {
-			// 	await tx.insert(offersOfferCategories).values(
-			// 		categoryIdList.map((categoryId) => ({
-			// 			offer_id: offer.id,
-			// 			category_id: categoryId,
-			// 		})),
-			// 	);
-			// }
-
-			if (data.levelIdList?.length) {
-				await tx.insert(offersOfferLevels).values(
-					data.levelIdList.map((levelId) => ({
-						offer_id: offer.id,
-						offer_level_id: levelId,
-					})),
+			await tx
+				.insert(offersOfferCategories)
+				.values(
+					createOfferRelationValues(
+						offer.id,
+						"offer_category_id",
+						data.categoryIdList,
+					),
 				);
-			}
+
+			await tx
+				.insert(offersOfferLevels)
+				.values(
+					createOfferRelationValues(
+						offer.id,
+						"offer_level_id",
+						data.levelIdList,
+					),
+				);
+
+			await tx
+				.insert(offersOfferFormats)
+				.values(
+					createOfferRelationValues(
+						offer.id,
+						"offer_format_id",
+						data.formatIdList,
+					),
+				);
 
 			return offer;
 		});
@@ -61,18 +78,50 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 				.where(eq(offers.user_id, userId))
 				.returning();
 
-			// TODO fix
+			if (data.categoryIdList?.length) {
+				await tx
+					.delete(offersOfferCategories)
+					.where(eq(offersOfferCategories.offer_id, offer.id));
+				await tx
+					.insert(offersOfferCategories)
+					.values(
+						createOfferRelationValues(
+							offer.id,
+							"offer_category_id",
+							data.categoryIdList,
+						),
+					);
+			}
 
-			// if (categoryIds) {
-			// 	await tx.delete(offersOfferCategories).where(eq(offersOfferCategories.offer_id, offer.id));
+			if (data.levelIdList?.length) {
+				await tx
+					.delete(offersOfferLevels)
+					.where(eq(offersOfferLevels.offer_id, offer.id));
+				await tx
+					.insert(offersOfferLevels)
+					.values(
+						createOfferRelationValues(
+							offer.id,
+							"offer_level_id",
+							data.levelIdList,
+						),
+					);
+			}
 
-			// 	await tx.insert(offersOfferCategories).values(
-			// 		categoryIds.map((categoryId) => ({
-			// 			offer_id: offer.id,
-			// 			category_id: categoryId,
-			// 		})),
-			// 	);
-			// }
+			if (data.formatIdList?.length) {
+				await tx
+					.delete(offersOfferFormats)
+					.where(eq(offersOfferFormats.offer_id, offer.id));
+				await tx
+					.insert(offersOfferFormats)
+					.values(
+						createOfferRelationValues(
+							offer.id,
+							"offer_format_id",
+							data.formatIdList,
+						),
+					);
+			}
 
 			return offer;
 		});
@@ -106,7 +155,6 @@ export function createOfferRepository({ db }: OfferRepositoryDeps) {
 	return {
 		create,
 		update,
-
 		findByUserId,
 		findByOfferId,
 	};

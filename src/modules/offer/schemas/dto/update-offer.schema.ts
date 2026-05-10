@@ -12,10 +12,9 @@ export const UpdateOfferRequestSchema = createUpdateSchema(offers)
 		updated_at: true,
 	})
 	.extend({
-		categoryIds: z
-			.array(z.number())
-			.min(1, "At least one category must be selected")
-			.optional(),
+		formatIdList: z.array(z.number()).optional(),
+		levelIdList: z.array(z.number()).optional(),
+		categoryIdList: z.array(z.number()).optional(),
 	})
 	.refine(
 		(payload) => {
