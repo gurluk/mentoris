@@ -142,7 +142,7 @@ export function createAuthService({
 		const isTokenInvalid =
 			!storedToken ||
 			storedToken.revoked ||
-			storedToken.expires_at < new Date();
+			new Date(storedToken.expires_at) < new Date();
 
 		if (isTokenInvalid)
 			throw new InvalidCredentialsError("Token has been revoked or is expired");
