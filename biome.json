@@ -14,12 +14,32 @@
     "indentStyle": "space",
     "indentWidth": 2
   },
+
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedFunctionParameters": {
+          "fix": "none",
+          "level": "warn",
+          "options": {}
+        },
+        "noUnusedVariables": {
+          "fix": "none",
+          "level": "warn",
+          "options": {}
+        }
+      },
+      "recommended": false,
       "suspicious": {
-        "noUnknownAtRules": "off"
+        "noConsole": {
+          "fix": "none",
+          "level": "info",
+          "options": {
+            "allow": ["info"]
+          }
+        }
       }
     },
     "domains": {
@@ -30,8 +50,20 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ["~/**"],
+              ":BLANK_LINE:",
+              ["./**"]
+            ]
+          }
+        }
       }
-    }
+    },
+    "enabled": true
   }
 }
