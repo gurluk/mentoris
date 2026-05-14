@@ -19,7 +19,7 @@
     "enabled": true,
     "rules": {
       "correctness": {
-        "noUnusedImports": "error",
+        "noUnusedImports": "warn",
         "noUnusedFunctionParameters": {
           "fix": "none",
           "level": "warn",
@@ -35,10 +35,7 @@
       "suspicious": {
         "noConsole": {
           "fix": "none",
-          "level": "info",
-          "options": {
-            "allow": ["info"]
-          }
+          "level": "warn"
         }
       }
     },
@@ -48,6 +45,7 @@
     }
   },
   "assist": {
+    "enabled": true,
     "actions": {
       "source": {
         "organizeImports": {
@@ -63,7 +61,6 @@
           }
         }
       }
-    },
-    "enabled": true
+    }
   }
 }
