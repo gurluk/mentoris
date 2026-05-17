@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
 import "@mantine/core/styles.css";
-import {
-  Button,
-  ColorSchemeScript,
-  Container,
-  Flex,
-  mantineHtmlProps,
-} from "@mantine/core";
+import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { Raleway } from "next/font/google";
 
 import { Providers } from "./providers";
@@ -21,22 +15,17 @@ const ralewayFont = Raleway({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" className="h-full antialiased" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
       </head>
+
       <body className={`${ralewayFont.className} min-h-dvh`}>
-        <Providers>
-          <Flex justify={"space-between"} py={"sm"} mx={"xl"}>
-            <Button>Login</Button>
-            <Button>Signup</Button>
-          </Flex>
-          <Container>{children}</Container>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

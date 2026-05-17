@@ -1,7 +1,23 @@
-import { QueryClient, type QueryClientConfig } from "@tanstack/react-query";
+import { environmentManager, QueryClient } from "@tanstack/react-query";
 
-const queryClientConfig: QueryClientConfig = {
-  defaultOptions: { queries: { staleTime: 300000, retry: false } },
-};
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000 * 2,
+        retry: false,
+      },
+    },
+  });
+}
 
-export const queryClient = new QueryClient(queryClientConfig);
+let browserQueryClient: QueryClient | undefined = undefined;
+
+export function getQueryClient() {
+  if (environmentManager.isServer()) {
+    return makeQueryClient();
+  } else {
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
+  }
+}
