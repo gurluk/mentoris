@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@mantine/core": "^9.2.0",
-    "@mantine/hooks": "^9.2.0",
+    "@mantine/core": "^9.2.1",
+    "@mantine/hooks": "^9.2.1",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-query-devtools": "^5.100.10",
     "axios": "^1.16.1",
-    "lucide-react": "^1.14.0",
+    "lucide-react": "^1.16.0",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -25,14 +25,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8.5.14",
-    "postcss-preset-mantine": "^1.18.0",
-    "postcss-simple-vars": "^7.0.1",
-    "tailwindcss": "^4",
     "typescript": "^5"
   }
 }

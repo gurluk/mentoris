@@ -1,12 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, Stack } from "@mantine/core";
 import { useForm } from "react-hook-form";
 
 import { defaultValues, schema } from "./loginForm.schema";
-import InputPassword from "@/components/ui/InputPassword";
-import { InputText } from "@/components/ui/InputText";
 
 export default function LoginForm() {
   const form = useForm({
@@ -19,29 +16,34 @@ export default function LoginForm() {
   });
 
   return (
-    <Card shadow="md" padding="xl" withBorder miw={400}>
-      <form onSubmit={onSubmit}>
-        <Stack>
-          <InputText
-            placeholder="Adresa e-pošte"
-            name="email"
-            control={form.control}
-          />
-          <InputPassword
-            placeholder="Lozinka"
-            name="password"
-            control={form.control}
-          />
-          <Button
-            className="w-full mt-6"
-            variant="solid"
-            size="large"
-            type="submit"
-          >
-            Prijava
-          </Button>
-        </Stack>
-      </form>
-    </Card>
+    <></>
+    // <Card
+    //   shadow={!isMobile ? "sm" : undefined}
+    //   padding="xl"
+    //   withBorder={!isMobile}
+    //   w={"100%"}
+    //   maw={500}
+    // >
+    //   <form onSubmit={onSubmit}>
+    //     <Stack>
+    //       <InputText
+    //         label="Adresa e-pošte"
+    //         placeholder="Adresa e-pošte"
+    //         name="email"
+    //         control={form.control}
+    //         required
+    //       />
+    //       <InputPassword
+    //         label="Lozinka"
+    //         required
+    //         pb={30}
+    //         placeholder="Lozinka"
+    //         name="password"
+    //         control={form.control}
+    //       />
+    //       <Button type="submit">Prijava</Button>
+    //     </Stack>
+    //   </form>
+    // </Card>
   );
 }
