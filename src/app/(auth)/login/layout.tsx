@@ -1,5 +1,6 @@
+import { Center } from "@mantine/core";
 import { PropsWithChildren } from "react";
 
 export default function Layout({ children }: PropsWithChildren) {
-  return <div className="flex-col">{children}</div>;
+  return <Center mih={"100dvh"}>{children}</Center>;
 }

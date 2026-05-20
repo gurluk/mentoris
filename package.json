@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@gfazioli/mantine-border-animate": "^2.0.3",
     "@hookform/resolvers": "^5.2.2",
     "@mantine/core": "^9.2.1",
     "@mantine/hooks": "^9.2.1",

@@ -14,7 +14,9 @@ export function Providers({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <MantineProvider theme={mantineTheme}>{children}</MantineProvider>
+      <MantineProvider forceColorScheme="light" theme={mantineTheme}>
+        {children}
+      </MantineProvider>
     </QueryClientProvider>
   );
 }

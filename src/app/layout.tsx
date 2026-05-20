@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
+import "@mantine/core/styles.css";
 import "../styles/globals.css";
+import "@gfazioli/mantine-border-animate/styles.css";
 
-import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
-import { Outfit } from "next/font/google";
+import { mantineHtmlProps } from "@mantine/core";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
 import { Providers } from "./providers";
 
-const outfit = Outfit({
+const jakarta = Plus_Jakarta_Sans({
+  preload: true,
+  variable: "--font-jakarta",
   subsets: ["latin"],
 });
 
@@ -22,10 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body className={outfit.className}>
+      <body className={jakarta.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
