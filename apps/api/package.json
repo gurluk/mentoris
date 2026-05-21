@@ -8,16 +8,14 @@
 		"dev": "tsx --watch --env-file .env ./src/app.ts",
 		"build": "yarn build:emails && tsc && tsc-alias -p tsconfig.json && cp -R src/modules/email/templates dist/modules/email/templates",
 		"start": "node dist/app.js",
-		"build:emails": "tsx ./src/scripts/build-email-templates.ts",
 		"typecheck": "tsc --noEmit",
-		"biome:check": "biome check --no-errors-on-unmatched --files-ignore-unknown=true",
+		"build:emails": "tsx ./src/scripts/build-email-templates.ts",
 		"pre-commit": "lint-staged && yarn typecheck",
 		"pre-push": "yarn typecheck && yarn biome:check",
 		"db:generate": "drizzle-kit generate --name",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "drizzle-kit migrate",
-		"db:studio": "drizzle-kit studio",
-		"prepare": "husky install"
+		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.922.0",
@@ -43,7 +41,6 @@
 		"zod": "^4.0.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.1.2",
 		"@types/bcrypt": "^5.0.2",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/mjml": "^4.7.4",
@@ -51,17 +48,11 @@
 		"@types/nodemailer": "^7.0.1",
 		"@types/pg": "^8.15.5",
 		"drizzle-kit": "^0.31.4",
-		"husky": "^8.0.0",
-		"lint-staged": "12.3.2",
 		"mjml": "^4.16.1",
 		"tsx": "^4.20.3",
 		"typescript": "^6.0.2"
 	},
-	"lint-staged": {
-		"*.{ts,js,json}": [
-			"yarn biome:check"
-		]
-	},
+
 	"resolutions": {
 		"@fastify/static": "9.1.0"
 	}

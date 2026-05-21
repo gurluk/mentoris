@@ -1,0 +1,15 @@
+{
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+
+	"editor.codeActionsOnSave": {
+		"source.fixAll.biome": "always",
+		"source.organizeImports": "never",
+		"source.sort.json": "never",
+		"source.organizeImports.biome": "always"
+	},
+	"editor.defaultFormatter": "biomejs.biome",
+	"js/ts.updateImportsOnFileMove.enabled": "always",
+	"editor.formatOnSave": true,
+}
