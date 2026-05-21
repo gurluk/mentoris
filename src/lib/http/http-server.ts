@@ -1,17 +1,29 @@
+"use server";
+
+import { cookies } from "next/headers";
+
 const baseURL = process.env.API_URL;
 
 export async function httpServer<T>(
   path: string,
   init?: RequestInit & {
-    next?: NextFetchRequestConfig;
+    auth?: boolean;
   },
 ): Promise<T> {
+  const cookieStore = await cookies();
+
+  const cookieHeader = cookieStore
+    .getAll()
+    .map((c) => `${c.name}=${c.value}`)
+    .join("; ");
+
   const res = await fetch(`${baseURL}${path}`, {
     ...init,
     headers: {
       ...init?.headers,
+      cookie: cookieHeader,
     },
-    credentials: "include",
+    cache: init?.auth ? "no-store" : "force-cache",
   });
 
   if (!res.ok) {
