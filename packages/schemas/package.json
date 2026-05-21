@@ -1,5 +1,5 @@
 {
-  "name": "@mentoris/schemas",
+  "name": "@mentoris/schema",
   "version": "0.0.0",
   "private": true,
   "type": "module",

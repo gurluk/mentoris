@@ -12,7 +12,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@mantine/core": "^9.2.1",
     "@mantine/hooks": "^9.2.1",
-    "@mentoris/schemas": "workspace:*",
+    "@mentoris/schema": "workspace:*",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-query-devtools": "^5.100.10",
     "axios": "^1.16.1",

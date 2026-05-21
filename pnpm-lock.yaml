@@ -243,7 +243,7 @@ importers:
       '@fastify/swagger-ui':
         specifier: ^5.2.5
         version: 5.2.6
-      '@mentoris/schemas':
+      '@mentoris/schema':
         specifier: workspace:*
         version: link:../../packages/schemas
       bcrypt:
@@ -334,7 +334,7 @@ importers:
       '@mantine/hooks':
         specifier: ^9.2.1
         version: 9.2.1(react@19.2.4)
-      '@mentoris/schemas':
+      '@mentoris/schema':
         specifier: workspace:*
         version: link:../../packages/schemas
       '@tanstack/react-query':
