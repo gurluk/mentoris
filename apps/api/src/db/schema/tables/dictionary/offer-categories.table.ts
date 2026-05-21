@@ -5,16 +5,16 @@ import { offersOfferCategories } from "../../junctions/offers-offer-categories.t
 import { timestampColumns } from "../../partials/timestampColumns";
 
 export const offerCategories = pgTable("offer_categories", {
-	id: serial("id").primaryKey(),
-	code: varchar("code", { length: 50 }).notNull().unique(),
-	label: varchar("label", { length: 50 }).notNull().unique(),
-	active: boolean("active").default(true),
-	...timestampColumns,
+  id: serial("id").primaryKey(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  label: varchar("label", { length: 50 }).notNull().unique(),
+  active: boolean("active").default(true),
+  ...timestampColumns,
 });
 
 export const offerCategoriesRelations = relations(
-	offerCategories,
-	({ many }) => ({
-		offersOfferCategories: many(offersOfferCategories),
-	}),
+  offerCategories,
+  ({ many }) => ({
+    offersOfferCategories: many(offersOfferCategories),
+  }),
 );

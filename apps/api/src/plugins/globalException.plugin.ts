@@ -11,31 +11,31 @@ import { handleValidationError } from "~/shared/errors/handlers/handleValidation
 import { buildErrorResponse } from "~/shared/utils/errorResponse.util";
 
 const globalExceptionHandler: FastifyPluginAsync = async (app) => {
-	app.setErrorHandler((error: FastifyError, _req, reply) => {
-		const handlers = [
-			handleAppError,
-			handleValidationError,
-			handleDbError,
-			handleAuthError,
-			handleUnknownError, // MUST BE LAST IN ARRAY
-		];
+  app.setErrorHandler((error: FastifyError, _req, reply) => {
+    const handlers = [
+      handleAppError,
+      handleValidationError,
+      handleDbError,
+      handleAuthError,
+      handleUnknownError, // MUST BE LAST IN ARRAY
+    ];
 
-		for (const handler of handlers) {
-			const handled = handler(error, reply);
-			if (handled) break;
-		}
-	});
+    for (const handler of handlers) {
+      const handled = handler(error, reply);
+      if (handled) break;
+    }
+  });
 
-	app.setNotFoundHandler((_request, reply) => {
-		return reply.status(HttpStatus.NOT_FOUND).send(
-			buildErrorResponse({
-				message: "Route not found",
-				code: ApiErrorCode.NOT_FOUND,
-			}),
-		);
-	});
+  app.setNotFoundHandler((_request, reply) => {
+    return reply.status(HttpStatus.NOT_FOUND).send(
+      buildErrorResponse({
+        message: "Route not found",
+        code: ApiErrorCode.NOT_FOUND,
+      }),
+    );
+  });
 };
 
 export const globalExceptionPlugin = fp(globalExceptionHandler, {
-	name: "global-exception-plugin",
+  name: "global-exception-plugin",
 });

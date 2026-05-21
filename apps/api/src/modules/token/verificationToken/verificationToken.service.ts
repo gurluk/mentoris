@@ -7,70 +7,70 @@ import { generateUuid } from "~/shared/utils/uuid.util";
 import { VerificationTokenRepository } from "./verificationToken.repository";
 
 type VerificationTokenServiceDeps = {
-	verificationTokenRepository: VerificationTokenRepository;
+  verificationTokenRepository: VerificationTokenRepository;
 };
 
 export function createVerificationTokenService({
-	verificationTokenRepository,
+  verificationTokenRepository,
 }: VerificationTokenServiceDeps) {
-	const MAX_TOKENS_PER_HOUR = 3;
+  const MAX_TOKENS_PER_HOUR = 3;
 
-	async function createVerificationToken(
-		userId: number,
-		context: VerificationTokenContext,
-	) {
-		const tokensCreatedCount =
-			await verificationTokenRepository.countRecentByUserAndContext(
-				userId,
-				context,
-			);
+  async function createVerificationToken(
+    userId: number,
+    context: VerificationTokenContext,
+  ) {
+    const tokensCreatedCount =
+      await verificationTokenRepository.countRecentByUserAndContext(
+        userId,
+        context,
+      );
 
-		if (tokensCreatedCount >= MAX_TOKENS_PER_HOUR) {
-			throw new TooManyRequestsError(
-				"Too many attempts. Please try again later.",
-			);
-		}
+    if (tokensCreatedCount >= MAX_TOKENS_PER_HOUR) {
+      throw new TooManyRequestsError(
+        "Too many attempts. Please try again later.",
+      );
+    }
 
-		const token = generateUuid();
-		const tokenHash = hashUtil.token.hash(token);
-		const expiresAt = minutesFromNow(30);
+    const token = generateUuid();
+    const tokenHash = hashUtil.token.hash(token);
+    const expiresAt = minutesFromNow(30);
 
-		await verificationTokenRepository.create({
-			userId,
-			context,
-			tokenHash,
-			expiresAt,
-		});
+    await verificationTokenRepository.create({
+      userId,
+      context,
+      tokenHash,
+      expiresAt,
+    });
 
-		return token;
-	}
+    return token;
+  }
 
-	async function markTokenUsed(rawToken: string) {
-		const tokenHash = hashUtil.token.hash(rawToken);
-		await verificationTokenRepository.markUsedByTokenHash(tokenHash);
-	}
+  async function markTokenUsed(rawToken: string) {
+    const tokenHash = hashUtil.token.hash(rawToken);
+    await verificationTokenRepository.markUsedByTokenHash(tokenHash);
+  }
 
-	async function findToken(
-		rawToken: string,
-		context: VerificationTokenContext,
-	) {
-		const tokenHash = hashUtil.token.hash(rawToken);
+  async function findToken(
+    rawToken: string,
+    context: VerificationTokenContext,
+  ) {
+    const tokenHash = hashUtil.token.hash(rawToken);
 
-		const token = await verificationTokenRepository.findValidByTokenHash(
-			tokenHash,
-			context,
-		);
+    const token = await verificationTokenRepository.findValidByTokenHash(
+      tokenHash,
+      context,
+    );
 
-		return token;
-	}
+    return token;
+  }
 
-	return {
-		createVerificationToken,
-		markTokenUsed,
-		findToken,
-	};
+  return {
+    createVerificationToken,
+    markTokenUsed,
+    findToken,
+  };
 }
 
 export type VerificationTokenService = ReturnType<
-	typeof createVerificationTokenService
+  typeof createVerificationTokenService
 >;

@@ -8,11 +8,11 @@ import * as schema from "./schema";
 export type DB = NodePgDatabase<typeof schema>;
 
 const pool = new Pool({
-	connectionString: env.DATABASE_URL,
+  connectionString: env.DATABASE_URL,
 });
 
 export const db = drizzle(pool, {
-	schema,
+  schema,
 });
 
 export { pool };

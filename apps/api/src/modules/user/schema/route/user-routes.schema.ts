@@ -6,9 +6,9 @@ import { createRouteSchema } from "~/shared/utils/createRouteSchema.util";
 import { UserDtoSchema } from "../dto/user.dto";
 
 export const getCurrentUserRouteSchema = createRouteSchema({
-	tags: [SwaggerTags.USER],
-	summary: "Fetch base user data",
-	response: {
-		[HttpStatus.OK]: ApiResponseSchema(UserDtoSchema),
-	},
+  tags: [SwaggerTags.USER],
+  summary: "Fetch base user data",
+  response: {
+    [HttpStatus.OK]: ApiResponseSchema(UserDtoSchema),
+  },
 });

@@ -10,7 +10,8 @@
 		"build": "pnpm -r build",
 		"lint": "pnpm -r lint",
 		"typecheck": "pnpm -r typecheck",
-		"biome:check": "biome check --no-errors-on-unmatched --files-ignore-unknown=true"
+		"biome:check": "biome check --no-errors-on-unmatched --files-ignore-unknown=true",
+		"format": "biome check . --write"
 	},
 	"devEngines": {
 		"packageManager": {

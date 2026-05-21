@@ -9,23 +9,23 @@ import { modColumns } from "../partials/modColumns";
 import { timestampColumns } from "../partials/timestampColumns";
 
 export const offers = pgTable("offers", {
-	id: serial("id").primaryKey(),
-	title: varchar("title", { length: 255 }).notNull(),
-	description: text("description").notNull(),
-	user_id: integer("user_id")
-		.notNull()
-		.references(() => users.id, { onDelete: "cascade" })
-		.unique(),
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  user_id: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" })
+    .unique(),
 
-	price_from_cents: integer("price_from_cents"),
-	price_to_cents: integer("price_to_cents"),
+  price_from_cents: integer("price_from_cents"),
+  price_to_cents: integer("price_to_cents"),
 
-	...modColumns,
-	...timestampColumns,
+  ...modColumns,
+  ...timestampColumns,
 });
 
 export const offersRelations = relations(offers, ({ many }) => ({
-	offersOfferCategories: many(offersOfferCategories),
-	offersOfferLevels: many(offersOfferLevels),
-	offersOfferFormats: many(offersOfferFormats),
+  offersOfferCategories: many(offersOfferCategories),
+  offersOfferLevels: many(offersOfferLevels),
+  offersOfferFormats: many(offersOfferFormats),
 }));

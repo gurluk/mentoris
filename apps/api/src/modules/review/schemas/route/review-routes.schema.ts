@@ -10,19 +10,19 @@ import { ReviewDtoSchema } from "../dto/review.dto";
 const TAG = SwaggerTags.OFFER;
 
 export const createReviewRouteSchema = createRouteSchema({
-	tags: [TAG],
-	summary: "Creates a review for an offer",
-	body: CreateReviewRequestSchema,
-	response: {
-		[HttpStatus.CREATED]: ApiResponseSchema(ReviewDtoSchema),
-	},
+  tags: [TAG],
+  summary: "Creates a review for an offer",
+  body: CreateReviewRequestSchema,
+  response: {
+    [HttpStatus.CREATED]: ApiResponseSchema(ReviewDtoSchema),
+  },
 });
 
 export const getOfferReviewsRouteSchema = createRouteSchema({
-	tags: [TAG],
-	summary: "Fetches all reviews for an offer",
-	params: offerIdParamsSchema,
-	response: {
-		[HttpStatus.OK]: ApiResponseSchema(ReviewDtoSchema.array()),
-	},
+  tags: [TAG],
+  summary: "Fetches all reviews for an offer",
+  params: offerIdParamsSchema,
+  response: {
+    [HttpStatus.OK]: ApiResponseSchema(ReviewDtoSchema.array()),
+  },
 });

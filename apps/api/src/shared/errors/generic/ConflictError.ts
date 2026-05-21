@@ -3,7 +3,7 @@ import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
 import { AppError } from "../base/AppError";
 
 export class ConflictError extends AppError {
-	constructor(message = "Conflict") {
-		super(message, ApiErrorCode.CONFLICT);
-	}
+  constructor(message = "Conflict") {
+    super(message, ApiErrorCode.CONFLICT);
+  }
 }

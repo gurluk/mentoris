@@ -9,18 +9,18 @@ import { UpdateProfileRequestSchema } from "../dto/update-profile.schema";
 const TAG = SwaggerTags.PROFILE;
 
 export const updateProfileRouteSchema = createRouteSchema({
-	tags: [TAG],
-	summary: "Updates profile",
-	body: UpdateProfileRequestSchema,
-	response: {
-		[HttpStatus.OK]: ApiResponseSchema(ProfileDtoSchema),
-	},
+  tags: [TAG],
+  summary: "Updates profile",
+  body: UpdateProfileRequestSchema,
+  response: {
+    [HttpStatus.OK]: ApiResponseSchema(ProfileDtoSchema),
+  },
 });
 
 export const getProfileRouteSchema = createRouteSchema({
-	tags: [TAG],
-	summary: "Fetches profile data",
-	response: {
-		[HttpStatus.OK]: ApiResponseSchema(ProfileDtoSchema),
-	},
+  tags: [TAG],
+  summary: "Fetches profile data",
+  response: {
+    [HttpStatus.OK]: ApiResponseSchema(ProfileDtoSchema),
+  },
 });

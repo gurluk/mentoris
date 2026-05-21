@@ -1,88 +1,90 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
-	"assist": {
-		"actions": {
-			"source": {
-				"organizeImports": {
-					"level": "on",
-					"options": {
-						"groups": [
-							":PACKAGE:",
-							":BLANK_LINE:",
-							["~/**"],
-							":BLANK_LINE:",
-							["./**"]
-						]
-					}
-				}
-			}
-		},
-		"enabled": true
-	},
-	"files": {
-		"ignoreUnknown": true,
-		"includes": [
-			"src/**/*.ts",
-			"src/**/*.js",
-			"src/**/*.json",
-			"src/**/*.md",
-			"scripts/**/*.ts",
-			"!src/db/migrations/**",
-			"**",
-			"!node_modules",
-			"!.next",
-			"!dist",
-			"!build"
-		]
-	},
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab"
-	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "double",
-			"semicolons": "always"
-		}
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"correctness": {
-				"noUnusedImports": "error",
-				"noUnusedFunctionParameters": {
-					"fix": "none",
-					"level": "warn",
-					"options": {}
-				},
-				"noUnusedVariables": {
-					"fix": "none",
-					"level": "warn",
-					"options": {}
-				}
-			},
-			"style": {
-				"noDefaultExport": "warn"
-			},
-			"recommended": false,
-			"suspicious": {
-				"noConsole": {
-					"fix": "none",
-					"level": "info",
-					"options": {
-						"allow": ["info"]
-					}
-				}
-			}
-		},
-		"domains": {
-			"next": "recommended",
-			"react": "recommended"
-		}
-	},
-	"vcs": {
-		"clientKind": "git",
-		"enabled": false,
-		"useIgnoreFile": false
-	}
+  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ["~/**"],
+              ":BLANK_LINE:",
+              ["./**"]
+            ]
+          }
+        }
+      }
+    },
+    "enabled": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "apps/**/*.{ts,tsx,js,jsx,json,md}",
+      "packages/**/*.{ts,tsx,js,jsx,json,md}",
+      "scripts/**/*.{ts,js,json,md}",
+
+      "!**/node_modules/**",
+      "!**/.next/**",
+      "!**/dist/**",
+      "!**/build/**",
+      "!**/coverage/**",
+      "!**/.turbo/**",
+
+      "!apps/api/src/db/migrations/**",
+      "!apps/web/next-env.d.ts"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        "noUnusedImports": "warn",
+        "noUnusedFunctionParameters": {
+          "fix": "none",
+          "level": "warn",
+          "options": {}
+        },
+        "noUnusedVariables": {
+          "fix": "none",
+          "level": "warn",
+          "options": {}
+        }
+      },
+      "style": {
+        "noDefaultExport": "off"
+      },
+      "recommended": false,
+      "suspicious": {
+        "noConsole": {
+          "fix": "none",
+          "level": "info",
+          "options": {
+            "allow": ["info"]
+          }
+        }
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "vcs": {
+    "clientKind": "git",
+    "enabled": false,
+    "useIgnoreFile": false
+  }
 }

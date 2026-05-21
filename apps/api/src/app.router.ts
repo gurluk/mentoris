@@ -7,9 +7,9 @@ import { profileRoutes } from "./modules/profile/profile.routes";
 import { userRoutes } from "./modules/user/user.routes";
 
 export const registerAppRoutes: FastifyPluginAsync = async (app) => {
-	app.register(authRoutes, { prefix: "/auth" });
-	app.register(userRoutes, { prefix: "/user" });
-	app.register(profileRoutes, { prefix: "/profiles" });
-	app.register(offerRoutes, { prefix: "/offers" });
-	app.register(dictionaryRoutes, { prefix: "/dictionaries" });
+  app.register(authRoutes, { prefix: "/auth" });
+  app.register(userRoutes, { prefix: "/user" });
+  app.register(profileRoutes, { prefix: "/profiles" });
+  app.register(offerRoutes, { prefix: "/offers" });
+  app.register(dictionaryRoutes, { prefix: "/dictionaries" });
 };

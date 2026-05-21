@@ -1,19 +1,19 @@
 import { ApiErrorCode } from "~/shared/enums/apiCode.enum";
 
 export class AppError extends Error {
-	public readonly code: ApiErrorCode;
-	public readonly fieldErrors: Record<string, string[]> | null;
+  public readonly code: ApiErrorCode;
+  public readonly fieldErrors: Record<string, string[]> | null;
 
-	constructor(
-		message: string | null,
-		code: ApiErrorCode,
-		fieldErrors: Record<string, string[]> | null = null,
-	) {
-		super(message ?? "");
+  constructor(
+    message: string | null,
+    code: ApiErrorCode,
+    fieldErrors: Record<string, string[]> | null = null,
+  ) {
+    super(message ?? "");
 
-		this.code = code;
-		this.fieldErrors = fieldErrors;
+    this.code = code;
+    this.fieldErrors = fieldErrors;
 
-		Object.setPrototypeOf(this, new.target.prototype);
-	}
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
 }

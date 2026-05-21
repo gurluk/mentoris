@@ -16,54 +16,54 @@ import { createUserRepository } from "~/modules/user/user.repository";
 import { createUserService } from "~/modules/user/user.service";
 
 export const applicationPlugin = fp(
-	async (app: FastifyInstance) => {
-		// Plugins
-		const { db, jwt, emailProvider } = app;
+  async (app: FastifyInstance) => {
+    // Plugins
+    const { db, jwt, emailProvider } = app;
 
-		// Repositories
-		const offerRepository = createOfferRepository({ db });
-		const profileRepository = createProfileRepository({ db });
-		const reviewRepository = createReviewRepository({ db });
-		const refreshTokenRepository = createRefreshTokenRepository({ db });
-		const userRepository = createUserRepository({ db });
-		const verificationTokenRepository = createVerificationTokenRepository({
-			db,
-		});
+    // Repositories
+    const offerRepository = createOfferRepository({ db });
+    const profileRepository = createProfileRepository({ db });
+    const reviewRepository = createReviewRepository({ db });
+    const refreshTokenRepository = createRefreshTokenRepository({ db });
+    const userRepository = createUserRepository({ db });
+    const verificationTokenRepository = createVerificationTokenRepository({
+      db,
+    });
 
-		// Services
-		const reviewService = createReviewService({
-			reviewRepository,
-			offerRepository,
-		});
-		const offerService = createOfferService({ offerRepository });
-		const userService = createUserService({ userRepository });
+    // Services
+    const reviewService = createReviewService({
+      reviewRepository,
+      offerRepository,
+    });
+    const offerService = createOfferService({ offerRepository });
+    const userService = createUserService({ userRepository });
 
-		const tokenService = createTokenService({ jwt });
-		const verificationTokenService = createVerificationTokenService({
-			verificationTokenRepository,
-		});
+    const tokenService = createTokenService({ jwt });
+    const verificationTokenService = createVerificationTokenService({
+      verificationTokenRepository,
+    });
 
-		const profileService = createProfileService({ profileRepository });
+    const profileService = createProfileService({ profileRepository });
 
-		const authService = createAuthService({
-			refreshTokenRepository,
-			profileRepository,
-			emailProvider,
-			tokenService,
-			userRepository,
-			verificationTokenService,
-		});
+    const authService = createAuthService({
+      refreshTokenRepository,
+      profileRepository,
+      emailProvider,
+      tokenService,
+      userRepository,
+      verificationTokenService,
+    });
 
-		app.decorate("authService", authService);
-		app.decorate("offerService", offerService);
-		app.decorate("reviewService", reviewService);
-		app.decorate("tokenService", tokenService);
-		app.decorate("verificationTokenService", verificationTokenService);
-		app.decorate("profileService", profileService);
-		app.decorate("userService", userService);
-	},
-	{
-		name: "application-plugin",
-		dependencies: ["db-client-plugin", "email-plugin"],
-	},
+    app.decorate("authService", authService);
+    app.decorate("offerService", offerService);
+    app.decorate("reviewService", reviewService);
+    app.decorate("tokenService", tokenService);
+    app.decorate("verificationTokenService", verificationTokenService);
+    app.decorate("profileService", profileService);
+    app.decorate("userService", userService);
+  },
+  {
+    name: "application-plugin",
+    dependencies: ["db-client-plugin", "email-plugin"],
+  },
 );
