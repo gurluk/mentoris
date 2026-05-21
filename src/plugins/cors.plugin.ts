@@ -4,7 +4,7 @@ import fp from "fastify-plugin";
 
 const corsHandler: FastifyPluginAsync = async (app) => {
 	await app.register(cors, {
-		origin: "http://localhost:4321",
+		origin: "http://localhost:3000",
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true,

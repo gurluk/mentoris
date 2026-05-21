@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
+import { DB } from "~/db/db";
 import { refreshTokens } from "~/db/schema";
-import { DB } from "~/plugins/db.plugin";
 import { msFromNow } from "~/shared/utils/datetime.util";
 import { singleOrNull } from "~/shared/utils/db.util";
 

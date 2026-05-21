@@ -1,7 +1,7 @@
 import { and, eq, gt, sql } from "drizzle-orm";
 
+import { DB } from "~/db/db";
 import { type VerificationTokenContext, verificationTokens } from "~/db/schema";
-import { DB } from "~/plugins/db.plugin";
 import { singleOrNull } from "~/shared/utils/db.util";
 
 type VerificationTokenRepositoryDeps = {

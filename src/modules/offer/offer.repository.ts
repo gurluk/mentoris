@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
 
+import { DB } from "~/db/db";
 import {
 	offers,
 	offersOfferCategories,
 	offersOfferFormats,
 	offersOfferLevels,
 } from "~/db/schema";
-import { DB } from "~/plugins/db.plugin";
 
 import { createOfferRelationValues } from "./helpers/createOfferRelationValues";
 import { CreateOfferRequest } from "./schemas/dto/create-offer.schema";

@@ -1,12 +1,12 @@
 import { and, eq, gt } from "drizzle-orm";
 
+import { DB } from "~/db/db";
 import {
 	profiles,
 	users,
 	type VerificationTokenContext,
 	verificationTokens,
 } from "~/db/schema";
-import { DB } from "~/plugins/db.plugin";
 import { singleOrNull } from "~/shared/utils/db.util";
 
 import { ROLES } from "../auth/auth.constants";

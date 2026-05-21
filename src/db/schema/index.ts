@@ -2,6 +2,7 @@ export * from "./enums/db.enum.schema";
 export * from "./junctions/offers-offer-categories.table";
 export * from "./junctions/offers-offer-formats.table";
 export * from "./junctions/offers-offer-levels.table";
+export * from "./tables/auth/auth.schema";
 export * from "./tables/dictionary/cities.table";
 export * from "./tables/dictionary/genders.table";
 export * from "./tables/dictionary/offer-categories.table";

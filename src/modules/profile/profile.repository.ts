@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
+import { DB } from "~/db/db";
 import { profiles } from "~/db/schema";
-import { DB } from "~/plugins/db.plugin";
 import { singleOrNull } from "~/shared/utils/db.util";
 
 import { UpdateProfileRequest } from "./schemas/dto/update-profile.schema";
