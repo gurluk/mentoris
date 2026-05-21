@@ -1,0 +1,79 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							":PACKAGE:",
+							":BLANK_LINE:",
+							["~/**"],
+							":BLANK_LINE:",
+							["./**"]
+						]
+					}
+				}
+			}
+		},
+		"enabled": true
+	},
+	"files": {
+		"ignoreUnknown": true,
+		"includes": [
+			"src/**/*.ts",
+			"src/**/*.js",
+			"src/**/*.json",
+			"src/**/*.md",
+			"scripts/**/*.ts",
+			"!src/db/migrations/**"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double",
+			"semicolons": "always"
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"correctness": {
+				"noUnusedImports": "error",
+				"noUnusedFunctionParameters": {
+					"fix": "none",
+					"level": "warn",
+					"options": {}
+				},
+				"noUnusedVariables": {
+					"fix": "none",
+					"level": "warn",
+					"options": {}
+				}
+			},
+			"style": {
+				"noDefaultExport": "error"
+			},
+			"recommended": false,
+			"suspicious": {
+				"noConsole": {
+					"fix": "none",
+					"level": "info",
+					"options": {
+						"allow": ["info"]
+					}
+				}
+			}
+		}
+	},
+	"vcs": {
+		"clientKind": "git",
+		"enabled": false,
+		"useIgnoreFile": false
+	}
+}
