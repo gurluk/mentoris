@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@mentoris/web",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,6 +12,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@mantine/core": "^9.2.1",
     "@mantine/hooks": "^9.2.1",
+    "@mentoris/schemas": "workspace:*",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-query-devtools": "^5.100.10",
     "axios": "^1.16.1",
@@ -26,7 +27,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "postcss": "^8.5.14",
-    "typescript": "^5"
+    "postcss": "^8.5.14"
   }
 }
