@@ -1,9 +1,7 @@
 {
-	"name": "backend",
-	"version": "0.1.0-alpha",
-	"main": "./src/app.ts",
+	"name": "api",
+	"private": true,
 	"type": "module",
-	"license": "MIT",
 	"scripts": {
 		"dev": "tsx --watch --env-file .env ./src/app.ts",
 		"build": "yarn build:emails && tsc && tsc-alias -p tsconfig.json && cp -R src/modules/email/templates dist/modules/email/templates",
@@ -51,9 +49,5 @@
 		"mjml": "^4.16.1",
 		"tsx": "^4.20.3",
 		"typescript": "^6.0.2"
-	},
-
-	"resolutions": {
-		"@fastify/static": "9.1.0"
 	}
 }

@@ -6,3 +6,6 @@ allowBuilds:
   bcrypt: true
   esbuild: true
   sharp: true
+
+overrides:
+  "@fastify/static": "9.1.0"
