@@ -17,7 +17,7 @@ export default function Cities() {
           MK
         </Avatar>
         <Title mt={5} order={4}>
-          Luka Gurdulic
+          {data.data[0].label}
         </Title>
       </Card>
     </SimpleGrid>

@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.922.0",
-    "@mentoris/schema": "workspace:*",
+    "@mentoris/contracts": "workspace:*",
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.1.0",
     "@fastify/jwt": "^10.0.0",
