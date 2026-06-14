@@ -3,23 +3,28 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Divider, Stack, Title } from "@mantine/core";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { defaultValues, schema } from "./loginForm.schema";
+import { useSendLoginOtp } from "@/api/auth/send-login-otp";
 import InputText from "@/components/input/InputText";
-import { authClient } from "@/lib/auth-client";
 
 export default function LoginForm() {
+  const router = useRouter();
   const form = useForm({
     defaultValues: defaultValues,
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = form.handleSubmit(async (formData) => {
-    const { data, error } = await authClient.emailOtp.sendVerificationOtp({
-      email: formData.email,
-      type: "sign-in",
-    });
+  const { mutate: sendLoginOtp } = useSendLoginOtp({
+    onSuccess(_data, variables) {
+      router.push(`/auth/otp?email=${encodeURIComponent(variables.email)}`);
+    },
+  });
+
+  const onSubmit = form.handleSubmit((formData) => {
+    sendLoginOtp({ email: formData.email });
   });
 
   return (

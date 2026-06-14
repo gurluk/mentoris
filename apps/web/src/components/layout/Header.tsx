@@ -1,7 +1,6 @@
 "use client";
 
-import { BorderAnimate } from "@gfazioli/mantine-border-animate";
-import { ActionIcon, Box, Button, Container, Flex, Group } from "@mantine/core";
+import { ActionIcon, Box, Container, Flex, Group } from "@mantine/core";
 import { User } from "lucide-react";
 import Link from "next/link";
 
@@ -34,7 +33,7 @@ export default function Header() {
                 </Button>
               </BorderAnimate> */}
               <ActionIcon
-                href="/login"
+                href="/auth"
                 component={Link}
                 c={"dark"}
                 variant="transparent"
