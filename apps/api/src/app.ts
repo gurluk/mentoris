@@ -13,7 +13,6 @@ import { applicationPlugin } from "./plugins/application.plugin";
 import { authPlugin } from "./plugins/auth.plugin";
 import { cookiePlugin } from "./plugins/cookie.plugin";
 import { corsPlugin } from "./plugins/cors.plugin";
-import { emailPlugin } from "./plugins/email.plugin";
 import { globalExceptionPlugin } from "./plugins/globalException.plugin";
 import { responsePlugin } from "./plugins/response.plugin";
 import { swaggerPlugin } from "./plugins/swagger.plugin";
@@ -31,9 +30,6 @@ export async function buildApp() {
 
   // DB client
   app.register(dbClientPlugin);
-
-  // Email service bootstrap
-  app.register(emailPlugin);
 
   // Cors
   app.register(corsPlugin);

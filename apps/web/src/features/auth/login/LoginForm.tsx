@@ -1,12 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, Divider, Stack, TextInput, Title } from "@mantine/core";
+import { Button, Card, Divider, Stack, Title } from "@mantine/core";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
 import { defaultValues, schema } from "./loginForm.schema";
 import InputText from "@/components/input/InputText";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginForm() {
   const form = useForm({
@@ -14,8 +15,11 @@ export default function LoginForm() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = form.handleSubmit((formData) => {
-    console.log(formData);
+  const onSubmit = form.handleSubmit(async (formData) => {
+    const { data, error } = await authClient.emailOtp.sendVerificationOtp({
+      email: formData.email,
+      type: "sign-in",
+    });
   });
 
   return (

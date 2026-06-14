@@ -1,13 +1,9 @@
 import "@fastify/jwt";
 import "fastify";
 
-import { AuthService } from "./modules/auth/auth.service";
-import { EmailProvider } from "./modules/email/email.types";
 import { OfferService } from "./modules/offer/offer.service";
 import { ProfileService } from "./modules/profile/profile.service";
 import { ReviewService } from "./modules/review/review.service";
-import { TokenService } from "./modules/token/token/token.service";
-import { VerificationTokenService } from "./modules/token/verificationToken/verificationToken.service";
 import { UserService } from "./modules/user/user.service";
 import { DB } from "./plugins/db.plugin";
 
@@ -17,12 +13,8 @@ declare module "fastify" {
     db: DB;
 
     // Services
-    emailProvider: EmailProvider;
-    authService: AuthService;
     offerService: OfferService;
     reviewService: ReviewService;
-    tokenService: TokenService;
-    verificationTokenService: VerificationTokenService;
     profileService: ProfileService;
     userService: UserService;
 
