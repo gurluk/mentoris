@@ -5,6 +5,7 @@ import { getQueryClient } from "@/lib/tanstack/query-client";
 export default async function Homepage() {
   const queryClient = getQueryClient();
 
+  // TODO getSession or use session
   // await queryClient.prefetchQuery({
   //   queryKey: queryKeys.cities.all(),
   //   queryFn: citiesApi.getCities,
