@@ -6,12 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLayoutEffect } from "react";
 import { useForm } from "react-hook-form";
 
+import { verifyOtpDefaults, verifyOtpSchema } from "./verify-otp-form.schema";
 import InputPin from "@/components/input/InputPin";
 import { authClient } from "@/lib/auth-client";
-import {
-  verifyOtpDefaults,
-  verifyOtpSchema,
-} from "../schema/verify-otp-form.schema";
 
 export default function VerifyOtpForm() {
   const router = useRouter();
@@ -80,7 +77,7 @@ export default function VerifyOtpForm() {
                 w={"100%"}
                 size="lg"
                 length={6}
-                my={14}
+                mt={14}
                 name="otp"
                 control={form.control}
                 onChange={(value) => {

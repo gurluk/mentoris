@@ -6,13 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
+import { LoginValues, loginDefaults, loginSchema } from "./login-form.schema";
 import { sendLoginOtp } from "@/api/auth/send-login-otp";
 import InputText from "@/components/input/InputText";
-import {
-  LoginValues,
-  loginDefaults,
-  loginSchema,
-} from "../schema/login-form.schema";
 
 export default function LoginForm() {
   const router = useRouter();

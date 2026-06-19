@@ -1,4 +1,4 @@
-import VerifyOtpForm from "@/features/auth/otp/components/VerifyOtpForm";
+import VerifyOtpForm from "@/features/auth/otp/VerifyOtpForm";
 
 export default async function VerifyOtpPage() {
   return <VerifyOtpForm />;
