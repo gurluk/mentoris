@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const verifyOtpSchema = z.object({
-  otp: z.string().length(6).default(""),
+  otp: z.string().length(6, "Unesite kod").default(""),
 });
 
 export const verifyOtpDefaults = verifyOtpSchema.parse({});

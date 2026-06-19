@@ -33,7 +33,7 @@ export default function Header() {
                 </Button>
               </BorderAnimate> */}
               <ActionIcon
-                href="/auth"
+                href="/login"
                 component={Link}
                 c={"dark"}
                 variant="transparent"
