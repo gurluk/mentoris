@@ -10,6 +10,7 @@ import { env } from "~/env";
 import { dbClientPlugin } from "~/plugins/db.plugin";
 
 import { applicationPlugin } from "./plugins/application.plugin";
+import { authPlugin } from "./plugins/auth.plugin";
 // import { authPlugin } from "./plugins/auth.plugin";
 import { cookiePlugin } from "./plugins/cookie.plugin";
 import { corsPlugin } from "./plugins/cors.plugin";
@@ -36,6 +37,9 @@ export async function buildApp() {
 
   // Check cookies
   app.register(cookiePlugin);
+
+  // Better auth check session
+  app.register(authPlugin);
 
   // Global response shape to use inside routes/controllers
   app.register(responsePlugin);

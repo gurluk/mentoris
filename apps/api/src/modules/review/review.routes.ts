@@ -24,6 +24,7 @@ export const reviewRoutes: FastifyPluginAsync = async (app: App) => {
   app.route({
     method: "GET",
     url: "/:offerId/reviews",
+    preHandler: [app.authenticate],
     schema: getOfferReviewsRouteSchema,
     handler: async function getOfferReviews(request, reply) {
       const reviews = await app.reviewService.getAllActiveOfferReviews(

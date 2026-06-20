@@ -22,8 +22,11 @@ export const dictionaryRoutes: FastifyPluginAsync = async (app: App) => {
   app.route({
     method: "GET",
     url: "/categories",
+    preHandler: [app.authenticate],
     schema: getCategoriesRouteSchema,
-    handler: async function getCategories(_request, reply) {
+    handler: async function getCategories(request, reply) {
+      console.log("USER", request.user);
+      console.log("session", request.session);
       const data = await app.db.select().from(offerCategories);
       reply.ok({ data: data });
     },

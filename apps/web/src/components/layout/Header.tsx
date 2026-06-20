@@ -6,11 +6,7 @@ import Link from "next/link";
 
 import { authClient } from "@/lib/auth-client";
 
-export default function Header() {
-  const { data } = authClient.useSession();
-
-  const email = data?.user.email;
-
+export default function Header({ email }: { email: string }) {
   return (
     <header
       style={{
@@ -28,7 +24,7 @@ export default function Header() {
             {/* <Group></Group> */}
             {/* RIGHT SECTION */}
             <Group gap="md">
-              {email}
+              {email ?? "Nemama mail nisam ulogiran"}
               <ActionIcon
                 href="/login"
                 component={Link}
