@@ -19,7 +19,6 @@ export default function VerifyOtpForm() {
   });
 
   const isSubmitting = form.formState.isSubmitting;
-
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
@@ -42,7 +41,7 @@ export default function VerifyOtpForm() {
       if (errorMessage) {
         form.setError("otp", {
           type: "server",
-          message: "Neispravan kod",
+          message: "Uneseni kod je nevažeći ili istekao",
         });
         return;
       }
@@ -61,47 +60,63 @@ export default function VerifyOtpForm() {
     <Card padding="xl" withBorder shadow="lg" w={"100%"} maw={440}>
       <form onSubmit={onSubmit}>
         <Stack>
-          <Stack>
-            <Title order={1} fz={26}>
-              Potvrdite svoju email adresu
-            </Title>
+          <Title order={1} fz={26}>
+            Potvrda email adrese
+          </Title>
 
-            <Text fz={14} c="dimmed">
-              Poslali smo vam 6-znamenkasti kod za potvrdu email adrese. Upišite
-              ga u polje ispod za nastavak.
-            </Text>
-          </Stack>
-          <Stack align="center">
-            <Center>
-              <InputPin
-                w={"100%"}
-                size="lg"
-                length={6}
-                mt={14}
-                name="otp"
-                control={form.control}
-                onChange={(value) => {
-                  form.clearErrors("otp");
-                  form.setValue("otp", value);
-                }}
-              />
-            </Center>
-            {otpError && (
-              <Text c="red" size="sm">
-                {otpError}
-              </Text>
-            )}
-            <Button
-              loading={isSubmitting}
-              disabled={isSubmitting}
-              size="lg"
-              fz="md"
-              type="submit"
-              w={"100%"}
-            >
-              {otpError ? "Pokušaj ponovno" : "Potvrdi kod"}
-            </Button>
-          </Stack>
+          <Text fz={14}>
+            Poslali smo vam 6-znamenkasti kod na email adresu. Upišite ga u
+            polje ispod za nastavak.
+          </Text>
+        </Stack>
+        <Center>
+          <InputPin
+            size="md"
+            length={6}
+            mt={26}
+            style={{ justifyContent: "center" }}
+            w={"100%"}
+            disabled={isSubmitting}
+            mb={6}
+            name="otp"
+            control={form.control}
+            onChange={(value) => {
+              form.clearErrors("otp");
+              form.setValue("otp", value);
+            }}
+          />
+        </Center>
+        {otpError && (
+          <Text c="red" size="sm">
+            {otpError}
+          </Text>
+        )}
+        <Button
+          loading={isSubmitting}
+          disabled={isSubmitting}
+          size="lg"
+          mt={20}
+          fz="md"
+          type="submit"
+          w={"100%"}
+        >
+          Potvrdi kod
+        </Button>
+        <Stack gap={0} mt={20} align="center">
+          <Text span ta={"center"} fz={14}>
+            Niste primili kod?
+          </Text>
+          <Button
+            p={0}
+            fz={14}
+            c={"dark"}
+            size="compact-sm"
+            variant="transparent"
+            td={"underline"}
+            fw={"bolder"}
+          >
+            Pošalji ponovno
+          </Button>
         </Stack>
       </form>
     </Card>
