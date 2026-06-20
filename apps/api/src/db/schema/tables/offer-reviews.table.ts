@@ -1,16 +1,16 @@
 import { relations } from "drizzle-orm";
 import { integer, numeric, pgTable, serial, text } from "drizzle-orm/pg-core";
 
+import { user } from "./auth/auth.schema";
 import { offers } from "./offers.table";
-import { users } from "./users.table";
 import { modColumns } from "../partials/modColumns";
 import { timestampColumns } from "../partials/timestampColumns";
 
 export const offerReviews = pgTable("offer_reviews", {
   id: serial("id").primaryKey(),
-  user_id: integer("user_id")
+  user_id: text("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }),
   offer_id: integer("offer_id")
     .notNull()
     .references(() => offers.id, { onDelete: "cascade" }),
@@ -25,9 +25,9 @@ export const offerReviews = pgTable("offer_reviews", {
 });
 
 export const offerReviewsRelations = relations(offerReviews, ({ one }) => ({
-  user: one(users, {
+  user: one(user, {
     fields: [offerReviews.user_id],
-    references: [users.id],
+    references: [user.id],
   }),
   offer: one(offers, {
     fields: [offerReviews.offer_id],

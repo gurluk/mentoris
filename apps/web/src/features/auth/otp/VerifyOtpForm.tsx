@@ -87,7 +87,7 @@ export default function VerifyOtpForm() {
           />
         </Center>
         {otpError && (
-          <Text c="red" size="sm">
+          <Text c="red" fz={13}>
             {otpError}
           </Text>
         )}

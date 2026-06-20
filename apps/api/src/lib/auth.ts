@@ -13,7 +13,7 @@ export const auth = betterAuth({
   emailAndPassword: { enabled: true, autoSignIn: true },
   plugins: [
     emailOTP({
-      async sendVerificationOTP({ email, otp, type }) {
+      async sendVerificationOTP({ email, otp }) {
         void sendEmailOTP(email, otp).catch((error) => {
           console.error("Failed to send OTP email", error);
         });

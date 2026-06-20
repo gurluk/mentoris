@@ -10,7 +10,7 @@ import { env } from "~/env";
 import { dbClientPlugin } from "~/plugins/db.plugin";
 
 import { applicationPlugin } from "./plugins/application.plugin";
-import { authPlugin } from "./plugins/auth.plugin";
+// import { authPlugin } from "./plugins/auth.plugin";
 import { cookiePlugin } from "./plugins/cookie.plugin";
 import { corsPlugin } from "./plugins/cors.plugin";
 import { globalExceptionPlugin } from "./plugins/globalException.plugin";
@@ -34,9 +34,6 @@ export async function buildApp() {
   // Cors
   app.register(corsPlugin);
 
-  // JWT check and inject in request object
-  app.register(authPlugin);
-
   // Check cookies
   app.register(cookiePlugin);
 
@@ -45,6 +42,7 @@ export async function buildApp() {
 
   // Global error response middleware
   app.register(globalExceptionPlugin);
+
   app.register(uploadFilePlugin);
 
   // Swagger register to generate swagger shema from routes

@@ -4,7 +4,13 @@ import { ActionIcon, Box, Container, Flex, Group } from "@mantine/core";
 import { User } from "lucide-react";
 import Link from "next/link";
 
+import { authClient } from "@/lib/auth-client";
+
 export default function Header() {
+  const { data } = authClient.useSession();
+
+  const email = data?.user.email;
+
   return (
     <header
       style={{
@@ -22,16 +28,7 @@ export default function Header() {
             {/* <Group></Group> */}
             {/* RIGHT SECTION */}
             <Group gap="md">
-              {/* <BorderAnimate
-                duration={3.5}
-                colorFrom="teal"
-                size="sm"
-                colorTo="violet"
-              >
-                <Button fz="md" fw={500} size="compact-lg" variant="default">
-                  Objavi oglas
-                </Button>
-              </BorderAnimate> */}
+              {email}
               <ActionIcon
                 href="/login"
                 component={Link}

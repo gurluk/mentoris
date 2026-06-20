@@ -8,6 +8,8 @@
 		"dev:web": "pnpm --filter @mentoris/web dev",
 		"dev:api": "pnpm --filter @mentoris/api dev",
 		"db:studio": "pnpm --filter @mentoris/api db:studio",
+		"db:generate": "pnpm --filter @mentoris/api db:generate",
+		"db:migrate": "pnpm --filter @mentoris/api db:migrate",
 		"build": "pnpm -r build",
 		"build:contracts": "pnpm --filter @mentoris/contracts build",
 		"lint": "pnpm -r lint",

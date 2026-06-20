@@ -11,6 +11,3 @@ export * from "./tables/dictionary/offer-levels.table";
 export * from "./tables/offer-reviews.table";
 export * from "./tables/offers.table";
 export * from "./tables/profiles.table";
-export * from "./tables/refresh-tokens.table";
-export * from "./tables/users.table";
-export * from "./tables/verification-tokens.table";
