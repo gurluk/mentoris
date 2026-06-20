@@ -14,7 +14,6 @@ export const dictionaryRoutes: FastifyPluginAsync = async (app: App) => {
     url: "/cities",
     schema: getCitiesRouteSchema,
     handler: async function getCities(_request, reply) {
-      console.log("FETCHING");
       const data = await app.db.select().from(cities);
       reply.ok({ data: data });
     },

@@ -1,7 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 
 import { App } from "~/app";
-import { createAuthGuards } from "~/shared/utils/createAuthGuards.util";
 
 import {
   createReviewRouteSchema,
@@ -9,21 +8,18 @@ import {
 } from "./schemas/route/review-routes.schema";
 
 export const reviewRoutes: FastifyPluginAsync = async (app: App) => {
-  const { authorizeUser } = createAuthGuards(app);
-
-  app.route({
-    method: "POST",
-    url: "/:offerId/reviews",
-    schema: createReviewRouteSchema,
-    onRequest: authorizeUser,
-    handler: async function createReview(request, reply) {
-      const review = await app.reviewService.createReview(
-        request.body,
-        request.userId,
-      );
-      reply.created({ data: review });
-    },
-  });
+  // app.route({
+  //   method: "POST",
+  //   url: "/:offerId/reviews",
+  //   schema: createReviewRouteSchema,
+  //   handler: async function createReview(request, reply) {
+  //     const review = await app.reviewService.createReview(
+  //       request.body,
+  //       request.userId,
+  //     );
+  //     reply.created({ data: review });
+  //   },
+  // });
 
   app.route({
     method: "GET",
