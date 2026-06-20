@@ -6,3 +6,5 @@ export const authClient = createAuthClient({
   baseURL: "http://localhost:3001",
   plugins: [nextCookies(), emailOTPClient()],
 });
+
+export type Session = typeof authClient.$Infer.Session;

@@ -1,7 +1,5 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { httpClient } from "@/lib/http/http-client";
-import { httpServer } from "@/lib/http/http-server";
 import { getQueryClient } from "@/lib/tanstack/query-client";
 
 export default async function Homepage() {
@@ -15,7 +13,7 @@ export default async function Homepage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div>test</div>
+      <></>
     </HydrationBoundary>
   );
 }
