@@ -14,7 +14,7 @@ export const mantineTheme = createTheme({
     },
     Button: {
       defaultProps: {
-        size: "md",
+        size: "sm",
       },
       styles: {
         root: {
