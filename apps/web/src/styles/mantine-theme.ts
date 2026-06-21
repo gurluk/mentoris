@@ -48,7 +48,7 @@ export const mantineTheme = createTheme({
       }),
       styles: {
         root: {
-          paddingInline: "32px",
+          paddingInline: "26px",
         },
       },
     },

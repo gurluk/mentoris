@@ -14,9 +14,11 @@ export default async function Header() {
         borderBottom: "1px solid var(--mantine-color-gray-2)",
       }}
     >
-      <Container>
+      <Container strategy="grid">
         <Flex justify="space-between" align="center" h={68}>
-          <Text fw={600}>LOGO</Text>
+          <Text fz={"xl"} fw={600}>
+            mentoris
+          </Text>
           {session ? <UserMenu session={session} /> : <LoginButton />}
         </Flex>
       </Container>

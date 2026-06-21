@@ -30,7 +30,7 @@ export default function LoginForm() {
   });
 
   return (
-    <Card padding="xl" withBorder shadow="lg" w={"100%"} maw={500}>
+    <Card padding="xl" withBorder shadow="md" w={"100%"} maw={500}>
       <form onSubmit={onSubmit}>
         <Stack>
           <Stack align="center" mb={16}>
