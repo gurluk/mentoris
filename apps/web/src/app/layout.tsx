@@ -4,13 +4,13 @@ import "../styles/globals.css";
 import "@gfazioli/mantine-border-animate/styles.css";
 
 import { mantineHtmlProps } from "@mantine/core";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Mada } from "next/font/google";
 
 import { Providers } from "./providers";
 
-const jakarta = Plus_Jakarta_Sans({
+const jakarta = Mada({
   preload: true,
-  variable: "--font-jakarta",
+  variable: "--font-mada",
   subsets: ["latin"],
 });
 

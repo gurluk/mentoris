@@ -13,11 +13,13 @@ export function Providers({ children }: PropsWithChildren) {
   const queryClient = getQueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <MantineProvider forceColorScheme="light" theme={mantineTheme}>
-        <IconProvider>{children}</IconProvider>
-      </MantineProvider>
-    </QueryClientProvider>
+    <IconProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <MantineProvider forceColorScheme="light" theme={mantineTheme}>
+          {children}
+        </MantineProvider>
+      </QueryClientProvider>
+    </IconProvider>
   );
 }

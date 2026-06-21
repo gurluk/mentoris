@@ -4,7 +4,7 @@ export const mantineTheme = createTheme({
   black: "#2b2b2b",
   primaryColor: "teal",
   primaryShade: 7,
-  fontFamily: "var(--font-jakarta)",
+  fontFamily: "var(--font-mada)",
   defaultRadius: "md",
   components: {
     ActionIcon: {
@@ -48,7 +48,7 @@ export const mantineTheme = createTheme({
       }),
       styles: {
         root: {
-          paddingInline: "26px",
+          paddingInline: "30px",
         },
       },
     },

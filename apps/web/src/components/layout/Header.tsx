@@ -9,11 +9,7 @@ export default async function Header() {
   const session: Session = await httpServer("/auth/get-session");
 
   return (
-    <header
-      style={{
-        borderBottom: "1px solid var(--mantine-color-gray-2)",
-      }}
-    >
+    <header>
       <Container strategy="grid">
         <Flex justify="space-between" align="center" h={68}>
           <Text fz={"xl"} fw={600}>
