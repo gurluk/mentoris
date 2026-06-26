@@ -11,7 +11,7 @@ export default async function Header() {
   return (
     <header>
       <Container strategy="grid">
-        <Flex justify="space-between" align="center" h={68}>
+        <Flex justify="space-between" align="center" h={74}>
           <Text fz={"xl"} fw={600}>
             mentoris
           </Text>

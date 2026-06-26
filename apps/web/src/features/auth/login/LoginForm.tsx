@@ -18,7 +18,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = form.handleSubmit(async ({ email }: LoginValues) => {
-    const { error } = await sendLoginOtp(email);
+    const { error, data } = await sendLoginOtp(email);
 
     if (error) {
       console.error(error);
@@ -26,11 +26,13 @@ export default function LoginForm() {
       return;
     }
 
-    router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+    if (data) {
+      router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+    }
   });
 
   return (
-    <Card padding="xl" withBorder shadow="md" w={"100%"} maw={500}>
+    <Card mx={14} maw={500}>
       <form onSubmit={onSubmit}>
         <Stack>
           <Stack align="center" mb={16}>

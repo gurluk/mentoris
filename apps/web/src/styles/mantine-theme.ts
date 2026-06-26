@@ -7,6 +7,13 @@ export const mantineTheme = createTheme({
   fontFamily: "var(--font-mada)",
   defaultRadius: "md",
   components: {
+    Card: {
+      defaultProps: {
+        padding: "xl",
+        shadow: "sm",
+        w: "100%",
+      },
+    },
     ActionIcon: {
       defaultProps: {
         size: "input-sm",
@@ -14,7 +21,7 @@ export const mantineTheme = createTheme({
     },
     Button: {
       defaultProps: {
-        size: "sm",
+        size: "md",
       },
       styles: {
         root: {
@@ -48,7 +55,7 @@ export const mantineTheme = createTheme({
       }),
       styles: {
         root: {
-          paddingInline: "30px",
+          paddingInline: "54px",
         },
       },
     },

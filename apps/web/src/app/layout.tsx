@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" {...mantineHtmlProps}>
-      <body className={jakarta.className}>
+      <body style={{ minWidth: "350px" }} className={jakarta.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
