@@ -1,7 +1,7 @@
 import { Center } from "@mantine/core";
 import { PropsWithChildren } from "react";
 
-export default async function Layout({ children }: PropsWithChildren) {
+export default async function AuthLayout({ children }: PropsWithChildren) {
   return (
     <Center
       mih={"100dvh"}

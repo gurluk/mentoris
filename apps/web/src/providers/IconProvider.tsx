@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 
 export default function IconProvider({ children }: PropsWithChildren) {
   return (
-    <LucideProvider size={18} strokeWidth={1.6}>
+    <LucideProvider size={18} strokeWidth={1.8}>
       {children}
     </LucideProvider>
   );

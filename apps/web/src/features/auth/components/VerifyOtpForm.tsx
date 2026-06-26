@@ -6,9 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLayoutEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { verifyOtpDefaults, verifyOtpSchema } from "./verify-otp-form.schema";
 import InputPin from "@/components/input/InputPin";
 import { authClient } from "@/lib/auth-client";
+import {
+  verifyOtpDefaults,
+  verifyOtpSchema,
+} from "../schema/verify-otp-form.schema";
 
 export default function VerifyOtpForm() {
   const router = useRouter();

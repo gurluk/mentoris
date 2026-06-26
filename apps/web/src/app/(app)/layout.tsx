@@ -1,12 +1,16 @@
 import { Container } from "@mantine/core";
 import { PropsWithChildren } from "react";
 
-import Header from "@/components/layout/Header";
+import Header from "@/components/layout/header/Header";
+import { Session } from "@/lib/auth-client";
+import { httpServer } from "@/lib/http/http-server";
 
-export default function Layout({ children }: PropsWithChildren) {
+export default async function AppLayout({ children }: PropsWithChildren) {
+  const session: Session = await httpServer("/auth/get-session");
+
   return (
     <>
-      <Header />
+      <Header session={session} />
       <Container strategy="grid">{children}</Container>
     </>
   );

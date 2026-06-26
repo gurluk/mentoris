@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function LoginButton() {
   return (
-    <Button href="/login" component={Link} leftSection={<LogIn />}>
+    <Button size="sm" href="/login" component={Link} leftSection={<LogIn />}>
       Prijava
     </Button>
   );
