@@ -6,6 +6,7 @@ import AppLogo from "@/components/AppLogo";
 import LoginButton from "@/features/auth/components/LoginButton";
 import ChatButton from "@/features/chat/components/ChatButton";
 import NotificationsButton from "@/features/notifications/components/NotificationsButton";
+import BecomeTutorButton from "@/features/onboarding/components/BecomeTutorButton";
 import { Session } from "@/lib/auth-client";
 
 type HeaderProps = {
@@ -26,11 +27,12 @@ export default async function Header({ session }: HeaderProps) {
       <HeaderLayout.Right>
         {session ? (
           <>
-            <Group justify="space-between" gap={6}>
+            <Group visibleFrom="md" justify="space-between" gap={14}>
+              <BecomeTutorButton />
               <ChatButton />
               <NotificationsButton />
+              <UserMenu session={session} />
             </Group>
-            <UserMenu session={session} />
           </>
         ) : (
           <LoginButton />

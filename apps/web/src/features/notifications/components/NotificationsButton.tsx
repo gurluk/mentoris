@@ -5,10 +5,10 @@ import { Bell } from "lucide-react";
 
 export default function NotificationsButton() {
   return (
-    <Menu position="bottom-end" shadow="md" width={240}>
+    <Menu>
       <Menu.Target>
         <ActionIcon c={"dark"} variant="transparent" radius="xl">
-          <Bell size={20} />
+          <Bell />
         </ActionIcon>
       </Menu.Target>
 

@@ -11,7 +11,9 @@ export default async function AppLayout({ children }: PropsWithChildren) {
   return (
     <>
       <Header session={session} />
-      <Container strategy="grid">{children}</Container>
+      <Container mt={30} strategy="grid">
+        {children}
+      </Container>
     </>
   );
 }

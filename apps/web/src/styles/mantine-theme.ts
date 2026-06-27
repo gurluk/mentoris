@@ -7,6 +7,15 @@ export const mantineTheme = createTheme({
   fontFamily: "var(--font-mada)",
   defaultRadius: "md",
   components: {
+    Menu: {
+      defaultProps: {
+        transitionProps: {
+          transition: "pop-top-right",
+        },
+        position: "bottom-end",
+        shadow: "sm",
+      },
+    },
     Card: {
       defaultProps: {
         padding: "xl",
@@ -38,10 +47,10 @@ export const mantineTheme = createTheme({
     InputWrapper: {
       styles: {
         label: {
-          fontSize: "0.9em",
+          fontSize: "1em",
           fontWeight: 500,
         },
-        error: { fontSize: "0.8em", fontWeight: 500 },
+        error: { fontSize: "0.9em", fontWeight: 500 },
       },
     },
     Container: {

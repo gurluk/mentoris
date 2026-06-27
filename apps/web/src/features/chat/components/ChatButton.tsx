@@ -5,10 +5,10 @@ import { MessageCircleMore } from "lucide-react";
 
 export default function ChatButton() {
   return (
-    <Menu position="bottom-end" shadow="md" width={240}>
+    <Menu>
       <Menu.Target>
         <ActionIcon c={"dark"} variant="transparent" radius="xl">
-          <MessageCircleMore size={20} />
+          <MessageCircleMore />
         </ActionIcon>
       </Menu.Target>
 

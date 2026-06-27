@@ -12,8 +12,8 @@ type HeaderBoxProps = GroupProps & {
 function HeaderLayout({ children }: HeaderLayoutProps) {
   return (
     <header>
-      <Container>
-        <Flex justify="space-between" align="center" h={74}>
+      <Container strategy="grid">
+        <Flex justify="space-between" align="center" py={24}>
           {children}
         </Flex>
       </Container>

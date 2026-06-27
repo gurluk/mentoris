@@ -74,9 +74,10 @@ export default function VerifyOtpForm() {
         </Stack>
         <Center>
           <InputPin
-            size="md"
+            size="lg"
             length={6}
             mt={26}
+            fw={700}
             style={{ justifyContent: "center" }}
             w={"100%"}
             disabled={isSubmitting}

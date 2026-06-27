@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { LogOut, Settings, User } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { authClient, Session } from "@/lib/auth-client";
@@ -38,10 +39,10 @@ export default function UserMenu({ session }: UserMenuProps) {
 
   return (
     <>
-      <Menu position="bottom-end" shadow="md" width={240}>
+      <Menu width={240}>
         <Menu.Target>
-          <ActionIcon variant="transparent" radius={"xl"}>
-            <Avatar radius="xl" size="md">
+          <ActionIcon size={"xl"} variant="transparent" radius={"xl"}>
+            <Avatar radius="xl" size="lg">
               {avatarText}
             </Avatar>
           </ActionIcon>
@@ -50,18 +51,22 @@ export default function UserMenu({ session }: UserMenuProps) {
         <Menu.Dropdown>
           {/* Header section */}
           <Box px="sm" py={8}>
-            <Text size="sm" fw={600} truncate>
+            <Text size="lg" fw={600} truncate>
               {displayName}
             </Text>
-            <Text size="xs" c="gray" truncate>
+            <Text size="md" c="gray" truncate>
               {email}
             </Text>
           </Box>
 
           <Menu.Divider />
 
-          {/* Navigation */}
-          <Menu.Item leftSection={<User />} fw={500}>
+          <Menu.Item
+            component={Link}
+            href={"/my-profile"}
+            leftSection={<User />}
+            fw={500}
+          >
             Moj profil
           </Menu.Item>
 
