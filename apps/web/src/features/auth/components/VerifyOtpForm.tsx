@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 import InputPin from "@/components/input/InputPin";
 import { authClient } from "@/lib/auth-client";
+import { promiseWithMinDelay } from "@/lib/promiseWIthMinDelay";
 import {
   verifyOtpDefaults,
   verifyOtpSchema,
@@ -31,13 +32,12 @@ export default function VerifyOtpForm() {
 
   const onSubmit = form.handleSubmit(async ({ otp }) => {
     try {
-      const [otpResult] = await Promise.all([
+      const otpResult = await promiseWithMinDelay(() =>
         authClient.signIn.emailOtp({
           email: email ?? "",
           otp,
         }),
-        new Promise((resolve) => setTimeout(resolve, 1000)),
-      ]);
+      );
 
       const errorMessage = otpResult.error?.message;
 

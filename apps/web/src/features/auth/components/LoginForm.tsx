@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import InputText from "@/components/input/InputText";
+import { promiseWithMinDelay } from "@/lib/promiseWIthMinDelay";
 import { sendLoginOtp } from "../api/auth.service";
 import {
   LoginValues,
@@ -16,13 +17,18 @@ import {
 
 export default function LoginForm() {
   const router = useRouter();
+
   const form = useForm({
     defaultValues: loginDefaults,
     resolver: zodResolver(loginSchema),
   });
 
+  const isSubmitting = form.formState.isSubmitting;
+
   const onSubmit = form.handleSubmit(async ({ email }: LoginValues) => {
-    const { error, data } = await sendLoginOtp(email);
+    const { data, error } = await promiseWithMinDelay(() =>
+      sendLoginOtp(email),
+    );
 
     if (error) {
       console.error(error);
@@ -46,12 +52,19 @@ export default function LoginForm() {
             </Text>
           </Stack>
           <InputText
+            disabled={isSubmitting}
             label="E-mail adresa"
             name="email"
             withAsterisk
             control={form.control}
           />
-          <Button size="lg" fz="md" type="submit">
+          <Button
+            loading={isSubmitting}
+            disabled={isSubmitting}
+            size="lg"
+            fz="md"
+            type="submit"
+          >
             Nastavi
           </Button>
           <Divider py={10} label="ili" />
