@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+.bg-gradient {
+  background:
+    radial-gradient(circle at 80% 20%, rgba(94, 234, 212, 0.05), transparent 40%),
+    radial-gradient(circle at 15% 85%, rgba(191, 219, 254, 0.05), transparent 45%),
+    linear-gradient(135deg, #ffffff 0%, #f8fcfc 55%, #f2fbfa 100%);
+}

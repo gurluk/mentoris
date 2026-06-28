@@ -17,11 +17,11 @@ import { useRouter } from "next/navigation";
 
 import { authClient, Session } from "@/lib/auth-client";
 
-type UserMenuProps = {
+type AvatarMenuProps = {
   session: Session;
 };
 
-export default function UserMenu({ session }: UserMenuProps) {
+export default function AvatarMenu({ session }: AvatarMenuProps) {
   const [opened, { open, close }] = useDisclosure(false);
 
   const router = useRouter();
@@ -59,7 +59,7 @@ export default function UserMenu({ session }: UserMenuProps) {
             </Text>
           </Box>
 
-          <Menu.Divider />
+          {/* <Menu.Divider />
 
           <Menu.Item
             component={Link}
@@ -72,7 +72,7 @@ export default function UserMenu({ session }: UserMenuProps) {
 
           <Menu.Item leftSection={<Settings />} fw={500}>
             Postavke
-          </Menu.Item>
+          </Menu.Item> */}
 
           <Menu.Divider />
 

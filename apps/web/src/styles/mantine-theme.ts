@@ -57,14 +57,16 @@ export const mantineTheme = createTheme({
       defaultProps: {
         size: "xl",
       },
+
       vars: () => ({
         root: {
-          "--container-size-xl": "1420px",
+          "--container-size-xl": "1400px",
         },
       }),
+
       styles: {
         root: {
-          paddingInline: "54px",
+          paddingInline: "clamp(16px, 3vw, 40px)",
         },
       },
     },
