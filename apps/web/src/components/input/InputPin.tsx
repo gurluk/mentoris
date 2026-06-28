@@ -21,5 +21,5 @@ export default function InputPin<T extends FieldValues>(
 
   const isError = !!fieldState.error?.message;
 
-  return <PinInput error={isError} {...field} {...restInputProps} />;
+  return <PinInput autoFocus error={isError} {...field} {...restInputProps} />;
 }

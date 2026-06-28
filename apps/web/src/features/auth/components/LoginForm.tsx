@@ -3,7 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Divider, Stack, Text, Title } from "@mantine/core";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import InputText from "@/components/input/InputText";
@@ -17,11 +18,17 @@ import {
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
 
   const form = useForm({
     defaultValues: loginDefaults,
     resolver: zodResolver(loginSchema),
   });
+
+  useEffect(() => {
+    if (email) form.resetField("email", { defaultValue: email });
+  }, [email, form.resetField]);
 
   const isSubmitting = form.formState.isSubmitting;
 
@@ -52,6 +59,7 @@ export default function LoginForm() {
             </Text>
           </Stack>
           <InputText
+            autoFocus
             disabled={isSubmitting}
             label="E-mail adresa"
             name="email"

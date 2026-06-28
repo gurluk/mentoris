@@ -1,11 +1,23 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, Center, Stack, Text, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Card,
+  Center,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { PencilLine } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLayoutEffect } from "react";
 import { useForm } from "react-hook-form";
 
+import ResendOtpButton from "./ResendOtpButton/ResendOtpButton";
 import InputPin from "@/components/input/InputPin";
 import { authClient } from "@/lib/auth-client";
 import { promiseWithMinDelay } from "@/lib/promiseWIthMinDelay";
@@ -16,7 +28,6 @@ import {
 
 export default function VerifyOtpForm() {
   const router = useRouter();
-
   const form = useForm({
     defaultValues: verifyOtpDefaults,
     resolver: zodResolver(verifyOtpSchema),
@@ -25,12 +36,13 @@ export default function VerifyOtpForm() {
   const isSubmitting = form.formState.isSubmitting;
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const otpError = form.formState.errors.otp?.message;
 
   useLayoutEffect(() => {
     if (!email) router.replace("/login");
   }, [email, router.replace]);
 
-  const onSubmit = form.handleSubmit(async ({ otp }) => {
+  const handleSubmit = form.handleSubmit(async ({ otp }) => {
     try {
       const otpResult = await promiseWithMinDelay(() =>
         authClient.signIn.emailOtp({
@@ -46,6 +58,7 @@ export default function VerifyOtpForm() {
           type: "server",
           message: "Uneseni kod je nevažeći ili istekao",
         });
+        form.setFocus("otp");
         return;
       }
 
@@ -55,24 +68,32 @@ export default function VerifyOtpForm() {
     }
   });
 
-  const otpError = form.formState.errors.otp?.message;
-
   if (!email) return;
 
   return (
     <Card maw={440}>
-      <form onSubmit={onSubmit}>
-        <Stack>
-          <Title order={1} fz={26}>
-            Potvrda email adrese
-          </Title>
-
-          <Text fz={14}>
-            Poslali smo vam 6-znamenkasti kod na email adresu. Upišite ga u
-            polje ispod za nastavak.
-          </Text>
+      <Stack align="center">
+        <Title order={1} fz={26}>
+          Potvrda email adrese
+        </Title>
+        <Stack align="center" gap={0}>
+          <Text>Unesite 6-znamenkasti kod poslan na:</Text>
+          <Group gap={0}>
+            <Text fw={600}>{email}</Text>
+            <ActionIcon
+              href={`/login?email=${encodeURIComponent(email)}`}
+              component={Link}
+              c={"teal"}
+              size={"input-xs"}
+              variant="transparent"
+            >
+              <PencilLine size={16} />
+            </ActionIcon>
+          </Group>
         </Stack>
-        <Center>
+      </Stack>
+      <Center>
+        <Box>
           <InputPin
             size="lg"
             length={6}
@@ -87,42 +108,22 @@ export default function VerifyOtpForm() {
             onChange={(value) => {
               form.clearErrors("otp");
               form.setValue("otp", value);
+              if (value.length === 6) handleSubmit();
             }}
           />
-        </Center>
-        {otpError && (
-          <Text c="red" fz={13}>
-            {otpError}
-          </Text>
-        )}
-        <Button
-          loading={isSubmitting}
-          disabled={isSubmitting}
-          size="lg"
-          mt={20}
-          fz="md"
-          type="submit"
-          w={"100%"}
-        >
-          Potvrdi kod
-        </Button>
-        <Stack gap={0} mt={20} align="center">
-          <Text span ta={"center"} fz={14}>
-            Niste primili kod?
-          </Text>
-          <Button
-            p={0}
-            fz={14}
-            c={"dark"}
-            size="compact-sm"
-            variant="transparent"
-            td={"underline"}
-            fw={"bolder"}
-          >
-            Pošalji ponovno
-          </Button>
-        </Stack>
-      </form>
+          {otpError && (
+            <Text c="red" fz={13}>
+              {otpError}
+            </Text>
+          )}
+        </Box>
+      </Center>
+      <Stack gap={0} mt={20} align="center">
+        <Text span ta={"center"} fz={14}>
+          Niste primili kod?
+        </Text>
+        <ResendOtpButton email={email} isSubmitting={isSubmitting} />
+      </Stack>
     </Card>
   );
 }
