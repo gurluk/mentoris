@@ -42,7 +42,7 @@ export default function LoginForm() {
   });
 
   return (
-    <Card mx={14} maw={500}>
+    <Card maw={500}>
       <form onSubmit={onSubmit}>
         <Stack>
           <Stack align="center" mb={16}>

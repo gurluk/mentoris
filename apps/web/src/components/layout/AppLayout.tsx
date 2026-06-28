@@ -37,7 +37,7 @@ export default function AppLayout({
       header={{ height: 76 }}
     >
       <AppShellHeader>
-        <Container h={"100%"}>
+        <Container>
           <HeaderTemplate>
             <HeaderTemplate.Left>
               <Button

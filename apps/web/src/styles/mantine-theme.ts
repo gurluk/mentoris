@@ -66,7 +66,7 @@ export const mantineTheme = createTheme({
 
       styles: {
         root: {
-          paddingInline: "clamp(16px, 3vw, 32px)",
+          paddingInline: "clamp(18px, 3vw, 32px)",
         },
       },
     },

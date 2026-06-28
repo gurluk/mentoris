@@ -1,7 +1,7 @@
 import { Group, GroupProps } from "@mantine/core";
 import React from "react";
 
-type HeaderLayoutProps = {
+type HeaderTemplateProps = GroupProps & {
   children: React.ReactNode;
 };
 
@@ -9,9 +9,9 @@ type HeaderBoxProps = GroupProps & {
   children: React.ReactNode;
 };
 
-function HeaderTemplate({ children }: HeaderLayoutProps) {
+function HeaderTemplate({ children, ...props }: HeaderTemplateProps) {
   return (
-    <Group justify="space-between" align="center" h={"100%"}>
+    <Group justify="space-between" align="center" h={76} {...props}>
       {children}
     </Group>
   );

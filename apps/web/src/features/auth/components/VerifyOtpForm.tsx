@@ -60,7 +60,7 @@ export default function VerifyOtpForm() {
   if (!email) return;
 
   return (
-    <Card mx={14} maw={440}>
+    <Card maw={440}>
       <form onSubmit={onSubmit}>
         <Stack>
           <Title order={1} fz={26}>
