@@ -30,7 +30,7 @@ export default function AppLayout({
   return (
     <AppShell
       navbar={{
-        width: 300,
+        width: 100,
         breakpoint: "sm",
         collapsed: { desktop: true, mobile: !opened },
       }}
@@ -73,7 +73,7 @@ export default function AppLayout({
       <AppShellNavbar>
         Navbar is collapsed on mobile at sm breakpoint. At that point it is no
         longer offset by padding in the main element and it takes the full width
-        of the screen when opened.
+        of the screen when opened
       </AppShellNavbar>
 
       <AppShellMain>
